@@ -1045,11 +1045,10 @@
         html += '<div class="table-wrap"><table><tbody><tr class="empty-row"><td>Belum ada item.</td></tr></tbody></table></div>';
         return;
       }
-      html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>'+def.headers.slice(1).join('</th><th>')+'</th><th>Dari</th><th></th></tr></thead><tbody>';
+      html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>'+def.headers.slice(1).join('</th><th>')+'</th><th></th></tr></thead><tbody>';
       rows.forEach(function(it, idx){
         html += '<tr class="'+(it.selesai?"done":"")+'"><td class="num-col">'+(idx+1)+'</td>';
         def.cols.forEach(function(col){ html += '<td'+(col==="jumlah"?' class="num-col"':'')+'>'+esc(fmtCell(col,it))+'</td>'; });
-        html += '<td class="who">'+esc(it.dari)+'</td>';
         html += '<td><button type="button" class="icon-btn" data-del="'+it.id+'" title="Hapus">✕</button></td></tr>';
       });
       html += '</tbody></table></div>';
@@ -1083,11 +1082,10 @@
       if (!rows.length){
         html += '<div class="table-wrap"><table><tbody><tr class="empty-row"><td>Belum ada pesanan '+def.label.toLowerCase()+' bulan ini.</td></tr></tbody></table></div>';
       } else {
-        html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>'+def.headers.slice(1).join('</th><th>')+'</th><th>Dari</th>'+(admin?'<th>Selesai</th><th></th>':'')+'</tr></thead><tbody>';
+        html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>'+def.headers.slice(1).join('</th><th>')+'</th>'+(admin?'<th>Selesai</th><th></th>':'')+'</tr></thead><tbody>';
         rows.forEach(function(it, idx){
           html += '<tr class="'+(it.selesai?"done":"")+'"><td class="num-col">'+(idx+1)+'</td>';
           def.cols.forEach(function(col){ html += '<td'+(col==="jumlah"?' class="num-col"':'')+'>'+esc(fmtCell(col,it))+'</td>'; });
-          html += '<td class="who">'+esc(it.dari)+'</td>';
           if (admin){
             html += '<td><input type="checkbox" class="check" data-done="'+it.id+'" '+(it.selesai?"checked":"")+'></td>';
             html += '<td><button type="button" class="icon-btn" data-del="'+it.id+'" title="Hapus">✕</button></td>';
