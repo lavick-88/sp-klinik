@@ -1134,6 +1134,7 @@
     prekursor: function(m){ return "SP PREKURSOR_Klinik Surya Giri Jaya Cerme " + m + ".docx"; }
   };
   var NOMOR_PREFIX = { oot: "02", prekursor: "01" };
+  var TEMPLATE_FILE = { reguler: "kosongan", bmhp: "bmhp", oot: "oot", prekursor: "prekursor" };
 
   var docxLibPromise = null;
   function loadDocxLib(){
@@ -1167,7 +1168,7 @@
     await loadDocxLib();
     var monthStr = state.monthReview;
     var rows = state.items.filter(function(it){ return it.jenis === j; });
-    var resp = await fetch(TEMPLATE_BASE + j + ".docx?v=" + Date.now());
+    var resp = await fetch(TEMPLATE_BASE + TEMPLATE_FILE[j] + ".docx?v=" + Date.now());
     if (!resp.ok) throw new Error("Template tidak ditemukan di server (" + resp.status + "). Coba muat ulang halaman (Ctrl+F5) lalu ulangi.");
     var buf = await resp.arrayBuffer();
     var zip = new window.PizZip(buf);
