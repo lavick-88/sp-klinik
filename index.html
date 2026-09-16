@@ -404,7 +404,6 @@
         </div>
         <div class="actions">
           <button type="button" class="btn btn-primary" id="btn-download-all">Unduh 4 Dokumen (ZIP)</button>
-          <button type="button" class="btn btn-ghost" id="btn-clear-done">Hapus yang sudah selesai</button>
         </div>
       </div>
     </div>
@@ -544,7 +543,7 @@
   var el = {};
   ["bulan-input","bulan-review","nama_obat","satuan","jumlah","bentuk_kekuatan","zat_aktif",
    "keterangan","btn-tambah","input-status","input-groups","bulan-label-input","review-groups",
-   "fields-bentuk","fields-zat","jenis-picker","btn-clear-done","nama-suggest","katalog-hint"
+   "fields-bentuk","fields-zat","jenis-picker","nama-suggest","katalog-hint"
   ].forEach(function(id){ el[id] = document.getElementById(id); });
 
   el["bulan-input"].value = state.monthInput;
@@ -979,8 +978,7 @@
       var res = await sb.from("pesanan").insert([{
         bulan: state.monthInput, jenis: state.jenis, nama_obat: nama, satuan: satuan, jumlah: jumlah,
         bentuk_kekuatan: bentuk || null, zat_aktif: zat || null, keterangan: ket || null,
-        dari: (profile && profile.nama) || (session && session.user.email) || "(tidak diketahui)",
-        selesai: false
+        dari: (profile && profile.nama) || (session && session.user.email) || "(tidak diketahui)"
       }]);
       if (res.error) throw res.error;
       addToCatalogIfNew(state.jenis, { nama_obat: nama, satuan: satuan, bentuk_kekuatan: bentuk, zat_aktif: zat, keterangan: ket });
@@ -1004,28 +1002,6 @@
       renderAll();
     }catch(e){ alert("Gagal menghapus: " + errMsg(e)); }
   }
-  async function toggleSelesai(id, val){
-    var item = state.items.find(function(it){ return String(it.id) === String(id); });
-    var prevVal = item ? item.selesai : null;
-    if (item) item.selesai = val;
-    renderAll();
-    try{
-      var res = await sb.from("pesanan").update({ selesai: !!val }).eq("id", id);
-      if (res.error) throw res.error;
-    }catch(e){
-      if (item) item.selesai = prevVal;
-      renderAll();
-      alert("Gagal menyimpan status: " + errMsg(e));
-    }
-  }
-
-  el["btn-clear-done"].addEventListener("click", async function(){
-    var done = state.items.filter(function(it){ return it.selesai; });
-    if (!done.length) return;
-    if (!confirm("Hapus " + done.length + " item yang sudah ditandai selesai untuk bulan ini?")) return;
-    for (var i=0;i<done.length;i++){ await deleteItem(done[i].id); }
-  });
-
   function fmtCell(col, it){
     if (col === "jumlah"){
       if (it.jenis === "prekursor") return it.jumlah + " (" + capitalize(terbilang(it.jumlah)) + ")";
@@ -1047,7 +1023,7 @@
       }
       html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>'+def.headers.slice(1).join('</th><th>')+'</th><th></th></tr></thead><tbody>';
       rows.forEach(function(it, idx){
-        html += '<tr class="'+(it.selesai?"done":"")+'"><td class="num-col">'+(idx+1)+'</td>';
+        html += '<tr><td class="num-col">'+(idx+1)+'</td>';
         def.cols.forEach(function(col){ html += '<td'+(col==="jumlah"?' class="num-col"':'')+'>'+esc(fmtCell(col,it))+'</td>'; });
         html += '<td><button type="button" class="icon-btn" data-del="'+it.id+'" title="Hapus">✕</button></td></tr>';
       });
@@ -1082,12 +1058,11 @@
       if (!rows.length){
         html += '<div class="table-wrap"><table><tbody><tr class="empty-row"><td>Belum ada pesanan '+def.label.toLowerCase()+' bulan ini.</td></tr></tbody></table></div>';
       } else {
-        html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>'+def.headers.slice(1).join('</th><th>')+'</th>'+(admin?'<th>Selesai</th><th></th>':'')+'</tr></thead><tbody>';
+        html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>'+def.headers.slice(1).join('</th><th>')+'</th>'+(admin?'<th></th>':'')+'</tr></thead><tbody>';
         rows.forEach(function(it, idx){
-          html += '<tr class="'+(it.selesai?"done":"")+'"><td class="num-col">'+(idx+1)+'</td>';
+          html += '<tr><td class="num-col">'+(idx+1)+'</td>';
           def.cols.forEach(function(col){ html += '<td'+(col==="jumlah"?' class="num-col"':'')+'>'+esc(fmtCell(col,it))+'</td>'; });
           if (admin){
-            html += '<td><input type="checkbox" class="check" data-done="'+it.id+'" '+(it.selesai?"checked":"")+'></td>';
             html += '<td><button type="button" class="icon-btn" data-del="'+it.id+'" title="Hapus">✕</button></td>';
           }
           html += '</tr>';
@@ -1101,7 +1076,6 @@
 
   function wireRowActions(container){
     container.querySelectorAll("[data-del]").forEach(function(b){ b.addEventListener("click", function(){ deleteItem(b.dataset.del); }); });
-    container.querySelectorAll("[data-done]").forEach(function(c){ c.addEventListener("change", function(){ toggleSelesai(c.dataset.done, c.checked); }); });
     container.querySelectorAll("[data-copy]").forEach(function(b){
       b.addEventListener("click", async function(){
         var txt = tsvForJenis(b.dataset.copy);
@@ -1215,7 +1189,6 @@
   });
 
   function renderAll(){
-    el["btn-clear-done"].hidden = !isAdmin();
     document.getElementById("btn-download-all").hidden = !isAdmin();
     renderInputGroups();
     renderReviewGroups();
