@@ -1,0 +1,1036 @@
+<title>SP Klinik Cerme</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light dark;
+    --bg:#F5F6F2;
+    --surface:#FFFFFF;
+    --surface-2:#EEF2EF;
+    --ink:#1B2624;
+    --ink-muted:#5C6B67;
+    --line:#D8E0DC;
+    --accent:#0F6E5C;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#E1F0EA;
+    --warn:#92552A;
+    --warn-soft:#F5E7DA;
+    --danger:#9C3B34;
+    --danger-soft:#F5E0DE;
+    --shadow: 0 1px 2px rgba(20,30,28,0.06), 0 4px 14px rgba(20,30,28,0.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#121816;
+      --surface:#1B2320;
+      --surface-2:#212B27;
+      --ink:#E8EFEC;
+      --ink-muted:#9FB0AB;
+      --line:#2C3733;
+      --accent:#57C7A6;
+      --accent-ink:#08211B;
+      --accent-soft:#17332B;
+      --warn:#E0A464;
+      --warn-soft:#3A2A18;
+      --danger:#E38079;
+      --danger-soft:#3A2422;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 6px 20px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121816;
+    --surface:#1B2320;
+    --surface-2:#212B27;
+    --ink:#E8EFEC;
+    --ink-muted:#9FB0AB;
+    --line:#2C3733;
+    --accent:#57C7A6;
+    --accent-ink:#08211B;
+    --accent-soft:#17332B;
+    --warn:#E0A464;
+    --warn-soft:#3A2A18;
+    --danger:#E38079;
+    --danger-soft:#3A2422;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 6px 20px rgba(0,0,0,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  html{background:var(--bg);}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    padding-inline:20px;
+    padding-block:28px 60px;
+    max-width:920px;
+    margin-inline:auto;
+    margin-block:0;
+  }
+  h1,h2,h3{font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0;}
+  .mono, .num, input[type="number"], .tag-num{font-family:'IBM Plex Mono', ui-monospace, monospace; font-variant-numeric:tabular-nums;}
+
+  header.page{
+    display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between;
+    gap:14px; margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--line);
+  }
+  .brand-eyebrow{
+    font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent);
+    font-weight:600; margin:0 0 6px;
+  }
+  header.page h1{font-size:26px; font-weight:600; color:var(--ink);}
+  header.page p{margin:6px 0 0; color:var(--ink-muted); font-size:14px; max-width:52ch;}
+
+  nav.tabs{
+    display:flex; gap:6px; background:var(--surface-2); padding:4px; border-radius:10px;
+    width:fit-content; margin-bottom:22px; border:1px solid var(--line);
+  }
+  nav.tabs button{
+    appearance:none; border:none; background:transparent; color:var(--ink-muted);
+    font:inherit; font-weight:600; font-size:14px; padding:9px 16px; border-radius:8px;
+    cursor:pointer; transition:background .15s, color .15s;
+  }
+  nav.tabs button.active{background:var(--surface); color:var(--ink); box-shadow:var(--shadow);}
+  nav.tabs button:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible{
+    outline:2px solid var(--accent); outline-offset:2px;
+  }
+
+  section.view{display:none;}
+  section.view.active{display:block;}
+
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:12px;
+    padding:20px; box-shadow:var(--shadow); margin-bottom:18px;
+  }
+  .card h2{font-size:17px; font-weight:600; margin-bottom:4px;}
+  .card .hint{color:var(--ink-muted); font-size:13px; margin:0 0 16px;}
+
+  .row{display:flex; gap:14px; flex-wrap:wrap;}
+  .field{display:flex; flex-direction:column; gap:6px; flex:1; min-width:150px;}
+  .field label{font-size:12.5px; font-weight:600; color:var(--ink-muted); letter-spacing:.02em;}
+  .field.grow{flex:2; min-width:220px;}
+  .field.narrow{flex:0 0 120px; min-width:100px;}
+
+  input[type="text"], input[type="number"], input[type="month"], select, textarea{
+    border:1px solid var(--line); background:var(--bg); color:var(--ink);
+    border-radius:8px; padding:9px 11px; font:inherit; font-size:14.5px; width:100%;
+  }
+  textarea{resize:vertical; min-height:38px;}
+
+  .jenis-picker{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;}
+  .jenis-btn{
+    border:1px solid var(--line); background:var(--surface-2); color:var(--ink);
+    padding:9px 14px; border-radius:999px; font:inherit; font-size:13.5px; font-weight:600;
+    cursor:pointer; display:flex; align-items:center; gap:6px;
+  }
+  .jenis-btn .dot{width:7px; height:7px; border-radius:50%; background:var(--ink-muted);}
+  .jenis-btn.active{background:var(--accent-soft); border-color:var(--accent); color:var(--accent);}
+  .jenis-btn.active .dot{background:var(--accent);}
+  .jenis-btn[data-jenis="oot"].active, .jenis-btn[data-jenis="prekursor"].active{
+    background:var(--warn-soft); border-color:var(--warn); color:var(--warn);
+  }
+  .jenis-btn[data-jenis="oot"].active .dot, .jenis-btn[data-jenis="prekursor"].active .dot{background:var(--warn);}
+
+  .extra-fields{display:none;}
+  .extra-fields.show{display:flex;}
+
+  .field-autocomplete{position:relative;}
+  .field-hint{margin:2px 0 0; font-size:11.5px; color:var(--ink-muted);}
+  .suggest-list{
+    position:absolute; top:calc(100% + 2px); left:0; right:0; z-index:30;
+    background:var(--surface); border:1px solid var(--line); border-radius:9px;
+    box-shadow:var(--shadow); list-style:none; margin:0; padding:5px; max-height:240px; overflow-y:auto;
+  }
+  .suggest-list li{
+    padding:8px 10px; border-radius:6px; cursor:pointer; font-size:14px;
+    display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  }
+  .suggest-list li .meta{color:var(--ink-muted); font-size:11.5px; white-space:nowrap; flex-shrink:0;}
+  .suggest-list li:hover, .suggest-list li.hi{background:var(--accent-soft); color:var(--accent);}
+  .suggest-list li:hover .meta, .suggest-list li.hi .meta{color:var(--accent);}
+
+  .btn{
+    appearance:none; border:none; border-radius:8px; padding:10px 18px; font:inherit;
+    font-weight:600; font-size:14px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+  }
+  .btn-primary{background:var(--accent); color:var(--accent-ink);}
+  .btn-primary:disabled{opacity:.5; cursor:not-allowed;}
+  .btn-ghost{background:transparent; color:var(--ink-muted); border:1px solid var(--line);}
+  .btn-ghost:hover{color:var(--ink); border-color:var(--ink-muted);}
+  .btn-row{display:flex; justify-content:flex-end; margin-top:14px;}
+
+  .status-line{font-size:13px; color:var(--ink-muted); margin-top:10px; min-height:18px;}
+  .status-line.error{color:var(--danger);}
+  .status-line.ok{color:var(--accent);}
+
+  .section-title{
+    display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+    margin:26px 0 10px;
+  }
+  .section-title h3{font-size:16px; font-weight:600;}
+  .count{
+    font-size:12.5px; color:var(--ink-muted); background:var(--surface-2);
+    border-radius:999px; padding:2px 10px; font-family:'IBM Plex Mono',monospace; white-space:nowrap;
+  }
+  .section-title.oot h3, .section-title.prekursor h3{color:var(--warn);}
+
+  .table-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:10px; background:var(--surface);}
+  table{width:100%; border-collapse:collapse; font-size:13.5px; min-width:560px;}
+  thead th{
+    text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--ink-muted); background:var(--surface-2); padding:9px 10px; border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  tbody td{padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr.done td{color:var(--ink-muted); text-decoration:line-through; text-decoration-color:var(--line);}
+  td.num-col{font-family:'IBM Plex Mono',monospace; text-align:right; white-space:nowrap;}
+  td.who{font-size:12px; color:var(--ink-muted); white-space:nowrap;}
+  .empty-row td{text-align:center; color:var(--ink-muted); font-style:italic; padding:20px;}
+
+  td.k-cell{padding:5px 6px;}
+  .k-input{
+    width:100%; min-width:110px; border:1px solid transparent; background:transparent; color:var(--ink);
+    border-radius:6px; padding:6px 7px; font:inherit; font-size:13.5px;
+  }
+  .k-input:hover{border-color:var(--line);}
+  .k-input:focus{border-color:var(--accent); background:var(--surface); outline:none;}
+  .k-input.dirty{border-color:var(--warn); background:var(--warn-soft);}
+  .k-actions{display:flex; gap:4px; white-space:nowrap;}
+  .k-save{
+    background:var(--accent-soft); color:var(--accent); border:none; border-radius:6px;
+    padding:6px 10px; font:inherit; font-size:12.5px; font-weight:600; cursor:pointer;
+  }
+  .k-save:disabled{opacity:.4; cursor:default;}
+
+  .icon-btn{
+    background:none; border:none; cursor:pointer; color:var(--ink-muted); padding:4px; border-radius:6px;
+    font-size:15px; line-height:1;
+  }
+  .icon-btn:hover{color:var(--danger); background:var(--danger-soft);}
+  .check{width:16px; height:16px; accent-color:var(--accent); cursor:pointer;}
+
+  .toolbar{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:6px;}
+  .toolbar .actions{display:flex; gap:8px; flex-wrap:wrap;}
+
+  .badge-tag{
+    font-size:11px; font-weight:700; letter-spacing:.03em; text-transform:uppercase;
+    padding:2px 8px; border-radius:999px; background:var(--surface-2); color:var(--ink-muted);
+  }
+  .banner{
+    background:var(--danger-soft); border:1px solid var(--danger); color:var(--danger); border-radius:10px; padding:14px 16px;
+    font-size:13.5px; margin-bottom:18px;
+  }
+  footer.note{margin-top:30px; font-size:12.5px; color:var(--ink-muted); text-align:center;}
+
+  @media (max-width:560px){
+    header.page{flex-direction:column; align-items:flex-start;}
+    .field{min-width:100%;}
+    table{min-width:520px;}
+  }
+</style>
+
+<header class="page">
+  <div>
+    <p class="brand-eyebrow">Klinik Surya Giri Jaya Cerme</p>
+    <h1>SP Klinik Cerme</h1>
+    <p>Loket pesanan obat &amp; BMHP dari asisten apoteker, untuk direkap apoteker penanggung jawab sebelum dibuatkan Surat Pesanan.</p>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button type="button" class="active" data-tab="input" role="tab">Input Pesanan</button>
+  <button type="button" data-tab="review" role="tab">Riwayat &amp; Review</button>
+  <button type="button" data-tab="katalog" role="tab">Database Obat</button>
+</nav>
+
+<div id="db-banner" class="banner" hidden></div>
+
+<!-- ============ INPUT TAB ============ -->
+<section class="view active" id="view-input">
+  <div class="card">
+    <h2>Data pengirim &amp; bulan pesanan</h2>
+    <p class="hint">Diisi sekali, akan diingat di perangkat ini.</p>
+    <div class="row">
+      <div class="field grow">
+        <label for="dari">Nama asisten apoteker</label>
+        <input type="text" id="dari" placeholder="mis. Rina">
+      </div>
+      <div class="field narrow">
+        <label for="bulan-input">Bulan pesanan</label>
+        <input type="month" id="bulan-input">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Tambah item pesanan</h2>
+    <p class="hint">Pilih jenis SP dulu &mdash; kolom yang diminta menyesuaikan otomatis.</p>
+
+    <div class="jenis-picker" id="jenis-picker">
+      <button type="button" class="jenis-btn active" data-jenis="reguler"><span class="dot"></span>Obat Reguler</button>
+      <button type="button" class="jenis-btn" data-jenis="bmhp"><span class="dot"></span>BMHP</button>
+      <button type="button" class="jenis-btn" data-jenis="oot"><span class="dot"></span>Obat Tertentu (OOT)</button>
+      <button type="button" class="jenis-btn" data-jenis="prekursor"><span class="dot"></span>Prekursor</button>
+    </div>
+
+    <div class="row">
+      <div class="field grow field-autocomplete">
+        <label for="nama_obat">Nama obat</label>
+        <input type="text" id="nama_obat" placeholder="Ketik untuk mencari&hellip;" autocomplete="off">
+        <ul class="suggest-list" id="nama-suggest" hidden></ul>
+        <p class="field-hint" id="katalog-hint"></p>
+      </div>
+      <div class="field narrow">
+        <label for="satuan">Satuan</label>
+        <input type="text" id="satuan" placeholder="Box" list="satuan-list">
+        <datalist id="satuan-list">
+          <option value="Box"><option value="Botol"><option value="Tube"><option value="Strip">
+          <option value="Ampul"><option value="Vial"><option value="Pcs"><option value="Sachet">
+        </datalist>
+      </div>
+      <div class="field narrow">
+        <label for="jumlah">Jumlah</label>
+        <input type="number" id="jumlah" min="0" step="1" placeholder="0">
+      </div>
+    </div>
+
+    <div class="row extra-fields" id="fields-bentuk">
+      <div class="field grow">
+        <label for="bentuk_kekuatan">Bentuk &amp; kekuatan sediaan</label>
+        <input type="text" id="bentuk_kekuatan" placeholder="mis. Tablet 15 mg">
+      </div>
+    </div>
+    <div class="row extra-fields" id="fields-zat">
+      <div class="field grow">
+        <label for="zat_aktif">Zat aktif prekursor</label>
+        <input type="text" id="zat_aktif" placeholder="mis. Pseudoefedrin HCl">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field grow">
+        <label for="keterangan">Catatan / keterangan (opsional)</label>
+        <textarea id="keterangan" rows="1" placeholder="mis. stok kosong total, isi 100 tablet/box, dsb."></textarea>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary" id="btn-tambah">Tambahkan ke daftar</button>
+    </div>
+    <p class="status-line" id="input-status"></p>
+  </div>
+
+  <div class="card" id="input-list-card">
+    <div class="toolbar">
+      <h2>Pesanan bulan ini &mdash; <span id="bulan-label-input">&ndash;</span></h2>
+    </div>
+    <p class="hint">Semua item yang sudah ditambahkan siapa pun untuk bulan ini.</p>
+    <div id="input-groups"></div>
+  </div>
+</section>
+
+<!-- ============ REVIEW TAB ============ -->
+<section class="view" id="view-review">
+  <div class="card">
+    <div class="toolbar">
+      <div class="field narrow" style="min-width:150px;">
+        <label for="bulan-review">Bulan direview</label>
+        <input type="month" id="bulan-review">
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" id="btn-clear-done">Hapus yang sudah selesai</button>
+      </div>
+    </div>
+  </div>
+  <div id="review-groups"></div>
+</section>
+
+<!-- ============ DATABASE OBAT TAB ============ -->
+<section class="view" id="view-katalog">
+  <div class="card">
+    <h2>Database obat</h2>
+    <p class="hint">Perbaiki ejaan yang mirip/duplikat, lengkapi satuan yang kosong, atau hapus yang sudah tidak dipakai. Perubahan langsung berlaku untuk pencarian di tab Input Pesanan.</p>
+    <div class="jenis-picker" id="katalog-jenis-picker">
+      <button type="button" class="jenis-btn active" data-jenis="reguler"><span class="dot"></span>Obat Reguler</button>
+      <button type="button" class="jenis-btn" data-jenis="bmhp"><span class="dot"></span>BMHP</button>
+      <button type="button" class="jenis-btn" data-jenis="oot"><span class="dot"></span>Obat Tertentu (OOT)</button>
+      <button type="button" class="jenis-btn" data-jenis="prekursor"><span class="dot"></span>Prekursor</button>
+    </div>
+    <div class="row">
+      <div class="field grow">
+        <label for="katalog-search">Cari dalam daftar</label>
+        <input type="text" id="katalog-search" placeholder="Ketik nama obat untuk menyaring&hellip;">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Tambah entri baru</h2>
+    <p class="hint">Untuk obat yang belum pernah dipesan lewat aplikasi ini.</p>
+    <div class="row" id="katalog-add-row"></div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary" id="btn-katalog-add">Tambahkan ke database</button>
+    </div>
+    <p class="status-line" id="katalog-status"></p>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <h2 style="margin:0;">Daftar &mdash; <span id="katalog-jenis-label"></span></h2>
+      <span class="count" id="katalog-count">0 obat</span>
+    </div>
+    <div id="katalog-table-wrap"></div>
+  </div>
+</section>
+
+<footer class="note">Data tersimpan di Supabase &middot; Klinik Surya Giri Jaya Cerme</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  "use strict";
+
+  var SUPABASE_URL = "https://rgrbdgqiefynbkilyrdx.supabase.co";
+  var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJncmJkZ3FpZWZ5bmJraWx5cmR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1Mjc1NzUsImV4cCI6MjEwNTEwMzU3NX0._es_cm6-PcsyaZH2I7ADBa76hglyjjSDRmNS70PP0gw";
+  var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  var JENIS_DEF = {
+    reguler: { label:"Obat Reguler", docTitle:"SP KOSONGAN",
+      cols: ["nama_obat","satuan","jumlah","keterangan"],
+      headers: ["No","Nama Obat","Satuan","Total","Keterangan"] },
+    bmhp: { label:"BMHP", docTitle:"SP KOSONGAN BMHP",
+      cols: ["nama_obat","satuan","jumlah","keterangan"],
+      headers: ["No","Nama Obat","Satuan","Total","Keterangan"] },
+    oot: { label:"Obat Tertentu (OOT)", docTitle:"SP OOT",
+      cols: ["nama_obat","bentuk_kekuatan","satuan","jumlah","keterangan"],
+      headers: ["No","Nama Obat","Bentuk dan Kekuatan Sediaan","Satuan","Jumlah","Keterangan"] },
+    prekursor: { label:"Prekursor Farmasi", docTitle:"SP PREKURSOR",
+      cols: ["nama_obat","zat_aktif","bentuk_kekuatan","satuan","jumlah","keterangan"],
+      headers: ["No","Nama Obat Mengandung Prekursor","Zat Aktif Prekursor","Bentuk dan Kekuatan Sediaan","Satuan","Jumlah Dalam Angka dan Huruf","Keterangan"] }
+  };
+  var JENIS_ORDER = ["reguler","bmhp","oot","prekursor"];
+  var COL_LABEL = {
+    nama_obat:"Nama obat", satuan:"Satuan", jumlah:"Jumlah", keterangan:"Keterangan",
+    bentuk_kekuatan:"Bentuk & kekuatan", zat_aktif:"Zat aktif prekursor"
+  };
+
+  function currentMonthStr(){
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0");
+  }
+  function monthLabel(m){
+    if(!m) return "–";
+    var parts = m.split("-"); var y = +parts[0], mo = +parts[1];
+    var names = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+    return names[mo-1] + " " + y;
+  }
+  function errMsg(e){ return (e && e.message) ? e.message : String(e); }
+
+  // --- Indonesian number-to-words (small, practical range for order quantities) ---
+  var SATUAN_KATA = ["","satu","dua","tiga","empat","lima","enam","tujuh","delapan","sembilan"];
+  function terbilang(n){
+    n = Math.round(n);
+    if (n < 0) return "";
+    if (n < 10) return SATUAN_KATA[n] || "nol";
+    if (n < 20) return (n===10?"sepuluh": n===11?"sebelas": SATUAN_KATA[n-10]+" belas");
+    if (n < 100) return (Math.floor(n/10)===1?"sepuluh":SATUAN_KATA[Math.floor(n/10)]+" puluh") + (n%10? " "+terbilang(n%10):"");
+    if (n < 200) return "seratus" + (n%100? " "+terbilang(n%100):"");
+    if (n < 1000) return SATUAN_KATA[Math.floor(n/100)]+" ratus" + (n%100? " "+terbilang(n%100):"");
+    if (n < 2000) return "seribu" + (n%1000? " "+terbilang(n%1000):"");
+    if (n < 1000000) return terbilang(Math.floor(n/1000))+" ribu" + (n%1000? " "+terbilang(n%1000):"");
+    return String(n);
+  }
+  function capitalize(s){ return s.replace(/\S+/g, function(w){ return w.charAt(0).toUpperCase()+w.slice(1); }); }
+
+  // --- state ---
+  var state = {
+    tab: "input",
+    jenis: "reguler",
+    monthInput: currentMonthStr(),
+    monthReview: currentMonthStr(),
+    items: [],
+    catalog: { reguler: [], bmhp: [], oot: [], prekursor: [] },
+    suggestHi: -1,
+    suggestItems: [],
+    katalogJenis: "reguler",
+    katalogFilter: ""
+  };
+
+  function showBanner(msg){
+    var b = document.getElementById("db-banner");
+    b.hidden = false;
+    b.textContent = msg;
+  }
+
+  var el = {};
+  ["dari","bulan-input","bulan-review","nama_obat","satuan","jumlah","bentuk_kekuatan","zat_aktif",
+   "keterangan","btn-tambah","input-status","input-groups","bulan-label-input","review-groups",
+   "fields-bentuk","fields-zat","jenis-picker","btn-clear-done","nama-suggest","katalog-hint"
+  ].forEach(function(id){ el[id] = document.getElementById(id); });
+
+  // restore local convenience prefs
+  try{
+    var savedName = localStorage.getItem("spcerme_nama");
+    if (savedName) el.dari.value = savedName;
+  }catch(e){}
+
+  el["bulan-input"].value = state.monthInput;
+  el["bulan-review"].value = state.monthReview;
+
+  // --- tabs ---
+  document.querySelectorAll("nav.tabs button").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll("nav.tabs button").forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+      state.tab = btn.dataset.tab;
+      document.getElementById("view-input").classList.toggle("active", state.tab==="input");
+      document.getElementById("view-review").classList.toggle("active", state.tab==="review");
+      document.getElementById("view-katalog").classList.toggle("active", state.tab==="katalog");
+      if (state.tab === "katalog"){
+        loadCatalog();
+      } else {
+        fetchMonth(activeMonth());
+      }
+    });
+  });
+
+  // --- jenis picker ---
+  el["jenis-picker"].addEventListener("click", function(e){
+    var b = e.target.closest(".jenis-btn");
+    if(!b) return;
+    document.querySelectorAll("#jenis-picker .jenis-btn").forEach(function(x){ x.classList.remove("active"); });
+    b.classList.add("active");
+    state.jenis = b.dataset.jenis;
+    var def = JENIS_DEF[state.jenis];
+    el["fields-bentuk"].classList.toggle("show", def.cols.indexOf("bentuk_kekuatan") !== -1);
+    el["fields-zat"].classList.toggle("show", def.cols.indexOf("zat_aktif") !== -1);
+    el.nama_obat.value = "";
+    updateKatalogHint();
+    hideSuggest();
+  });
+
+  // --- katalog (master drug database) ---
+  async function loadCatalog(){
+    try{
+      var res = await sb.from("katalog_obat").select("*").order("nama_obat", { ascending: true });
+      if (res.error) throw res.error;
+      var grouped = { reguler: [], bmhp: [], oot: [], prekursor: [] };
+      (res.data || []).forEach(function(row){ if (grouped[row.jenis]) grouped[row.jenis].push(row); });
+      state.catalog = grouped;
+      updateKatalogHint();
+      if (state.tab === "katalog") renderKatalogTab();
+    }catch(e){
+      showBanner("Gagal memuat database obat: " + errMsg(e));
+    }
+  }
+
+  function updateKatalogHint(){
+    var n = state.catalog[state.jenis].length;
+    el["katalog-hint"].textContent = n
+      ? "Cari dari " + n + " obat yang pernah dipesan, atau ketik nama baru."
+      : "Belum ada riwayat untuk kategori ini — nama baru akan otomatis tersimpan.";
+  }
+
+  function suggestionPool(){
+    var pool = state.catalog[state.jenis].slice();
+    var known = {};
+    pool.forEach(function(p){ known[p.nama_obat.toLowerCase()] = true; });
+    state.items.filter(function(it){ return it.jenis === state.jenis; }).forEach(function(it){
+      var key = it.nama_obat.toLowerCase();
+      if (!known[key]){
+        known[key] = true;
+        pool.push({ nama_obat: it.nama_obat, satuan: it.satuan, bentuk_kekuatan: it.bentuk_kekuatan, zat_aktif: it.zat_aktif });
+      }
+    });
+    return pool;
+  }
+
+  function hideSuggest(){
+    el["nama-suggest"].hidden = true;
+    el["nama-suggest"].innerHTML = "";
+    state.suggestItems = [];
+    state.suggestHi = -1;
+  }
+
+  function renderSuggest(query){
+    var q = query.trim().toLowerCase();
+    var pool = suggestionPool();
+    var matches = q ? pool.filter(function(p){ return p.nama_obat.toLowerCase().indexOf(q) !== -1; }) : pool;
+    matches.sort(function(a,b){
+      var ai = a.nama_obat.toLowerCase().indexOf(q), bi = b.nama_obat.toLowerCase().indexOf(q);
+      if (ai !== bi) return ai - bi;
+      return a.nama_obat.localeCompare(b.nama_obat);
+    });
+    matches = matches.slice(0, 8);
+    state.suggestItems = matches;
+    state.suggestHi = -1;
+    if (!matches.length){
+      hideSuggest();
+      return;
+    }
+    el["nama-suggest"].innerHTML = matches.map(function(m, i){
+      return '<li data-i="'+i+'"><span>'+esc(m.nama_obat)+'</span><span class="meta">'+esc(m.satuan||"")+'</span></li>';
+    }).join("");
+    el["nama-suggest"].hidden = false;
+  }
+
+  function pickSuggestion(i){
+    var m = state.suggestItems[i];
+    if (!m) return;
+    el.nama_obat.value = m.nama_obat;
+    if (m.satuan && !el.satuan.value) el.satuan.value = m.satuan;
+    if (m.bentuk_kekuatan && !el.bentuk_kekuatan.value) el.bentuk_kekuatan.value = m.bentuk_kekuatan;
+    if (m.zat_aktif && !el.zat_aktif.value) el.zat_aktif.value = m.zat_aktif;
+    hideSuggest();
+    el.jumlah.focus();
+  }
+
+  el.nama_obat.addEventListener("input", function(){ renderSuggest(el.nama_obat.value); });
+  el.nama_obat.addEventListener("focus", function(){ if (el.nama_obat.value.trim()) renderSuggest(el.nama_obat.value); });
+  el.nama_obat.addEventListener("keydown", function(e){
+    if (el["nama-suggest"].hidden) return;
+    if (e.key === "ArrowDown"){
+      e.preventDefault();
+      state.suggestHi = Math.min(state.suggestHi + 1, state.suggestItems.length - 1);
+      highlightSuggest();
+    } else if (e.key === "ArrowUp"){
+      e.preventDefault();
+      state.suggestHi = Math.max(state.suggestHi - 1, 0);
+      highlightSuggest();
+    } else if (e.key === "Enter"){
+      if (state.suggestHi >= 0){ e.preventDefault(); pickSuggestion(state.suggestHi); }
+      else hideSuggest();
+    } else if (e.key === "Escape"){
+      hideSuggest();
+    }
+  });
+  function highlightSuggest(){
+    Array.prototype.forEach.call(el["nama-suggest"].children, function(li, i){
+      li.classList.toggle("hi", i === state.suggestHi);
+    });
+  }
+  el["nama-suggest"].addEventListener("mousedown", function(e){
+    var li = e.target.closest("li[data-i]");
+    if (li) pickSuggestion(+li.dataset.i);
+  });
+  document.addEventListener("click", function(e){
+    if (!e.target.closest(".field-autocomplete")) hideSuggest();
+  });
+
+  async function addToCatalogIfNew(jenis, entry){
+    var lower = entry.nama_obat.toLowerCase();
+    var exists = state.catalog[jenis].some(function(p){ return p.nama_obat.toLowerCase() === lower; });
+    if (exists) return;
+    var payload = {
+      jenis: jenis, nama_obat: entry.nama_obat,
+      satuan: entry.satuan || null, bentuk_kekuatan: entry.bentuk_kekuatan || null,
+      zat_aktif: entry.zat_aktif || null, keterangan: entry.keterangan || null
+    };
+    try{
+      var res = await sb.from("katalog_obat").insert([payload]).select();
+      if (res.error) throw res.error;
+      if (res.data && res.data[0]){
+        state.catalog[jenis] = state.catalog[jenis].concat([res.data[0]]);
+        updateKatalogHint();
+      }
+    }catch(e){ /* best-effort; not fatal if this fails */ }
+  }
+
+  // --- Database Obat (katalog manage) tab ---
+  var katalogEl = {};
+  ["katalog-jenis-picker","katalog-search","katalog-add-row","btn-katalog-add","katalog-status",
+   "katalog-jenis-label","katalog-count","katalog-table-wrap"
+  ].forEach(function(id){ katalogEl[id] = document.getElementById(id); });
+
+  function katalogFields(jenis){
+    return JENIS_DEF[jenis].cols.filter(function(c){ return c !== "jumlah"; });
+  }
+
+  katalogEl["katalog-jenis-picker"].addEventListener("click", function(e){
+    var b = e.target.closest(".jenis-btn");
+    if (!b) return;
+    katalogEl["katalog-jenis-picker"].querySelectorAll(".jenis-btn").forEach(function(x){ x.classList.remove("active"); });
+    b.classList.add("active");
+    state.katalogJenis = b.dataset.jenis;
+    katalogEl["katalog-search"].value = "";
+    state.katalogFilter = "";
+    renderKatalogTab();
+  });
+
+  katalogEl["katalog-search"].addEventListener("input", function(){
+    state.katalogFilter = katalogEl["katalog-search"].value.trim().toLowerCase();
+    renderKatalogTab();
+  });
+
+  function renderKatalogAddRow(){
+    var jenis = state.katalogJenis;
+    var fields = katalogFields(jenis);
+    katalogEl["katalog-add-row"].innerHTML = fields.map(function(f){
+      var wide = (f === "nama_obat" || f === "bentuk_kekuatan" || f === "keterangan") ? " grow" : " narrow";
+      return '<div class="field'+wide+'"><label for="kadd-'+f+'">'+esc(COL_LABEL[f])+'</label>'+
+        '<input type="text" id="kadd-'+f+'" placeholder="'+esc(COL_LABEL[f])+'"></div>';
+    }).join("");
+  }
+
+  katalogEl["btn-katalog-add"].addEventListener("click", async function(){
+    var jenis = state.katalogJenis;
+    var fields = katalogFields(jenis);
+    var entry = { jenis: jenis };
+    fields.forEach(function(f){
+      var input = document.getElementById("kadd-"+f);
+      var v = input ? input.value.trim() : "";
+      if (v) entry[f] = v;
+    });
+    if (!entry.nama_obat){
+      katalogEl["katalog-status"].textContent = "Nama obat wajib diisi.";
+      katalogEl["katalog-status"].className = "status-line error";
+      return;
+    }
+    var lower = entry.nama_obat.toLowerCase();
+    if (state.catalog[jenis].some(function(p){ return p.nama_obat.toLowerCase() === lower; })){
+      katalogEl["katalog-status"].textContent = "Nama itu sudah ada di database.";
+      katalogEl["katalog-status"].className = "status-line error";
+      return;
+    }
+    katalogEl["btn-katalog-add"].disabled = true;
+    try{
+      var res = await sb.from("katalog_obat").insert([entry]).select();
+      if (res.error) throw res.error;
+      state.catalog[jenis] = state.catalog[jenis].concat(res.data || []);
+      katalogEl["katalog-status"].textContent = entry.nama_obat + " ditambahkan.";
+      katalogEl["katalog-status"].className = "status-line ok";
+      renderKatalogAddRow();
+      renderKatalogTab();
+    }catch(e){
+      katalogEl["katalog-status"].textContent = "Gagal menyimpan: " + errMsg(e);
+      katalogEl["katalog-status"].className = "status-line error";
+    }
+    katalogEl["btn-katalog-add"].disabled = false;
+  });
+
+  function renderKatalogTab(){
+    var jenis = state.katalogJenis;
+    var def = JENIS_DEF[jenis];
+    katalogEl["katalog-jenis-label"].textContent = def.label;
+    renderKatalogAddRow();
+
+    var fields = katalogFields(jenis);
+    var all = state.catalog[jenis];
+    var q = state.katalogFilter;
+    var rows = q ? all.filter(function(it){ return it.nama_obat.toLowerCase().indexOf(q) !== -1; }) : all;
+    katalogEl["katalog-count"].textContent = rows.length + " / " + all.length + " obat";
+
+    if (!rows.length){
+      katalogEl["katalog-table-wrap"].innerHTML = '<div class="table-wrap"><table><tbody><tr class="empty-row"><td>'+
+        (all.length ? "Tidak ada yang cocok dengan pencarian." : "Database masih kosong.") + '</td></tr></tbody></table></div>';
+      return;
+    }
+
+    var headerCells = fields.map(function(f){ return "<th>"+esc(COL_LABEL[f])+"</th>"; }).join("");
+    var html = '<div class="table-wrap"><table><thead><tr>'+headerCells+'<th></th><th></th></tr></thead><tbody>';
+    rows.forEach(function(it){
+      html += '<tr data-id="'+it.id+'">';
+      fields.forEach(function(f){
+        html += '<td class="k-cell"><input class="k-input" data-field="'+f+'" value="'+esc(it[f]||"")+'"></td>';
+      });
+      html += '<td class="k-actions"><button type="button" class="k-save" data-id="'+it.id+'" disabled>Simpan</button></td>';
+      html += '<td><button type="button" class="icon-btn k-del" data-id="'+it.id+'" title="Hapus">✕</button></td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    katalogEl["katalog-table-wrap"].innerHTML = html;
+
+    katalogEl["katalog-table-wrap"].querySelectorAll(".k-input").forEach(function(inp){
+      inp.addEventListener("input", function(){
+        inp.classList.add("dirty");
+        var tr = inp.closest("tr");
+        tr.querySelector(".k-save").disabled = false;
+      });
+    });
+    katalogEl["katalog-table-wrap"].querySelectorAll(".k-save").forEach(function(btn){
+      btn.addEventListener("click", async function(){
+        var id = btn.dataset.id;
+        var tr = btn.closest("tr");
+        var updated = {};
+        tr.querySelectorAll(".k-input").forEach(function(inp){
+          var v = inp.value.trim();
+          updated[inp.dataset.field] = v || null;
+        });
+        if (!updated.nama_obat){ alert("Nama obat tidak boleh kosong."); return; }
+        btn.disabled = true; btn.textContent = "Menyimpan…";
+        try{
+          var res = await sb.from("katalog_obat").update(updated).eq("id", id).select();
+          if (res.error) throw res.error;
+          var arr = state.catalog[jenis];
+          var idx = arr.findIndex(function(x){ return String(x.id) === String(id); });
+          if (idx !== -1 && res.data && res.data[0]) arr[idx] = res.data[0];
+          tr.querySelectorAll(".k-input").forEach(function(inp){ inp.classList.remove("dirty"); });
+          btn.textContent = "Tersimpan ✓";
+          setTimeout(function(){ btn.textContent = "Simpan"; btn.disabled = true; }, 1400);
+        }catch(e){
+          alert("Gagal menyimpan: " + errMsg(e));
+          btn.disabled = false; btn.textContent = "Simpan";
+        }
+      });
+    });
+    katalogEl["katalog-table-wrap"].querySelectorAll(".k-del").forEach(function(btn){
+      btn.addEventListener("click", async function(){
+        var id = btn.dataset.id;
+        var item = state.catalog[jenis].find(function(x){ return String(x.id) === String(id); });
+        if (!item) return;
+        if (!confirm('Hapus "' + item.nama_obat + '" dari database?')) return;
+        try{
+          var res = await sb.from("katalog_obat").delete().eq("id", id);
+          if (res.error) throw res.error;
+          state.catalog[jenis] = state.catalog[jenis].filter(function(x){ return String(x.id) !== String(id); });
+          renderKatalogTab();
+        }catch(e){
+          alert("Gagal menghapus: " + errMsg(e));
+        }
+      });
+    });
+  }
+
+  // --- month inputs ---
+  el["bulan-input"].addEventListener("change", function(){
+    state.monthInput = el["bulan-input"].value || currentMonthStr();
+    if (state.tab === "input") fetchMonth(state.monthInput);
+    el["bulan-label-input"].textContent = monthLabel(state.monthInput);
+  });
+  el["bulan-review"].addEventListener("change", function(){
+    state.monthReview = el["bulan-review"].value || currentMonthStr();
+    if (state.tab === "review") fetchMonth(state.monthReview);
+  });
+  el["bulan-label-input"].textContent = monthLabel(state.monthInput);
+
+  function setStatus(msg, kind){
+    el["input-status"].textContent = msg || "";
+    el["input-status"].className = "status-line" + (kind ? " "+kind : "");
+  }
+
+  function activeMonth(){
+    return state.tab === "review" ? state.monthReview : state.monthInput;
+  }
+
+  async function fetchMonth(month, silent){
+    try{
+      var res = await sb.from("pesanan").select("*").eq("bulan", month).order("created_at", { ascending: true });
+      if (res.error) throw res.error;
+      state.items = res.data || [];
+      renderAll();
+    }catch(e){
+      if (!silent) setStatus("Gagal memuat data: " + errMsg(e), "error");
+    }
+  }
+
+  async function addItem(){
+    var def = JENIS_DEF[state.jenis];
+    var dari = el.dari.value.trim();
+    var nama = el.nama_obat.value.trim();
+    var satuan = el.satuan.value.trim();
+    var jumlah = parseFloat(el.jumlah.value);
+    var bentuk = el.bentuk_kekuatan.value.trim();
+    var zat = el.zat_aktif.value.trim();
+    var ket = el.keterangan.value.trim();
+
+    if (!nama || !satuan || !jumlah || jumlah <= 0){
+      setStatus("Isi nama obat, satuan, dan jumlah (lebih dari 0) dulu ya.", "error");
+      return;
+    }
+    if (def.cols.indexOf("bentuk_kekuatan")!==-1 && !bentuk){
+      setStatus("Bentuk & kekuatan sediaan wajib diisi untuk " + def.label + ".", "error");
+      return;
+    }
+    if (def.cols.indexOf("zat_aktif")!==-1 && !zat){
+      setStatus("Zat aktif prekursor wajib diisi untuk " + def.label + ".", "error");
+      return;
+    }
+
+    try{ localStorage.setItem("spcerme_nama", dari); }catch(e){}
+
+    el["btn-tambah"].disabled = true;
+    setStatus("Menyimpan…");
+    try{
+      var res = await sb.from("pesanan").insert([{
+        bulan: state.monthInput,
+        jenis: state.jenis,
+        nama_obat: nama,
+        satuan: satuan,
+        jumlah: jumlah,
+        bentuk_kekuatan: bentuk || null,
+        zat_aktif: zat || null,
+        keterangan: ket || null,
+        dari: dari || "(tanpa nama)",
+        selesai: false
+      }]);
+      if (res.error) throw res.error;
+      addToCatalogIfNew(state.jenis, { nama_obat: nama, satuan: satuan, bentuk_kekuatan: bentuk, zat_aktif: zat, keterangan: ket });
+      el.nama_obat.value = ""; el.satuan.value=""; el.jumlah.value = "";
+      el.bentuk_kekuatan.value=""; el.zat_aktif.value=""; el.keterangan.value="";
+      el.nama_obat.focus();
+      setStatus(nama + " ditambahkan.", "ok");
+      fetchMonth(state.monthInput, true);
+    }catch(e){
+      setStatus("Gagal menyimpan: " + errMsg(e), "error");
+    }
+    el["btn-tambah"].disabled = false;
+  }
+  el["btn-tambah"].addEventListener("click", addItem);
+
+  async function deleteItem(id){
+    try{
+      var res = await sb.from("pesanan").delete().eq("id", id);
+      if (res.error) throw res.error;
+      state.items = state.items.filter(function(it){ return String(it.id) !== String(id); });
+      renderAll();
+    }catch(e){ alert("Gagal menghapus: " + errMsg(e)); }
+  }
+  async function toggleSelesai(id, val){
+    var item = state.items.find(function(it){ return String(it.id) === String(id); });
+    var prevVal = item ? item.selesai : null;
+    if (item) item.selesai = val;
+    renderAll();
+    try{
+      var res = await sb.from("pesanan").update({ selesai: !!val }).eq("id", id);
+      if (res.error) throw res.error;
+    }catch(e){
+      if (item) item.selesai = prevVal;
+      renderAll();
+      alert("Gagal menyimpan status: " + errMsg(e));
+    }
+  }
+
+  el["btn-clear-done"].addEventListener("click", async function(){
+    var done = state.items.filter(function(it){ return it.selesai; });
+    if (!done.length) return;
+    if (!confirm("Hapus " + done.length + " item yang sudah ditandai selesai untuk bulan ini?")) return;
+    for (var i=0;i<done.length;i++){ await deleteItem(done[i].id); }
+  });
+
+  function esc(s){
+    return String(s==null?"":s).replace(/[&<>]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]; });
+  }
+
+  function fmtCell(col, it){
+    if (col === "jumlah"){
+      if (it.jenis === "prekursor"){
+        return it.jumlah + " (" + capitalize(terbilang(it.jumlah)) + ")";
+      }
+      return String(it.jumlah);
+    }
+    return it[col] || (col==="keterangan" ? "–" : "");
+  }
+
+  // ---------- INPUT TAB rendering ----------
+  function renderInputGroups(){
+    el["bulan-label-input"].textContent = monthLabel(state.monthInput);
+    var itemsThisMonth = state.items;
+    var html = "";
+    JENIS_ORDER.forEach(function(j){
+      var def = JENIS_DEF[j];
+      var rows = itemsThisMonth.filter(function(it){ return it.jenis === j; });
+      html += '<div class="section-title'+(j==="oot"||j==="prekursor"?" "+j:"")+'"><h3>'+def.label+'</h3><span class="count">'+rows.length+' item</span></div>';
+      if (!rows.length){
+        html += '<div class="table-wrap"><table><tbody><tr class="empty-row"><td>Belum ada item.</td></tr></tbody></table></div>';
+        return;
+      }
+      html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>'+def.headers.slice(1).join('</th><th>')+'</th><th>Dari</th><th></th></tr></thead><tbody>';
+      rows.forEach(function(it, idx){
+        html += '<tr class="'+(it.selesai?"done":"")+'"><td class="num-col">'+(idx+1)+'</td>';
+        def.cols.forEach(function(col){
+          html += '<td'+(col==="jumlah"?' class="num-col"':'')+'>'+esc(fmtCell(col,it))+'</td>';
+        });
+        html += '<td class="who">'+esc(it.dari)+'</td>';
+        html += '<td><button type="button" class="icon-btn" data-del="'+it.id+'" title="Hapus">✕</button></td></tr>';
+      });
+      html += '</tbody></table></div>';
+    });
+    el["input-groups"].innerHTML = html;
+  }
+
+  // ---------- REVIEW TAB rendering ----------
+  function tsvForJenis(j){
+    var def = JENIS_DEF[j];
+    var rows = state.items.filter(function(it){ return it.jenis === j; });
+    var lines = [def.headers.join("\t")];
+    rows.forEach(function(it, idx){
+      var cells = [String(idx+1)];
+      def.cols.forEach(function(col){ cells.push(fmtCell(col,it)); });
+      lines.push(cells.join("\t"));
+    });
+    return lines.join("\n");
+  }
+
+  function renderReviewGroups(){
+    var html = "";
+    JENIS_ORDER.forEach(function(j){
+      var def = JENIS_DEF[j];
+      var rows = state.items.filter(function(it){ return it.jenis === j; });
+      html += '<div class="card">';
+      html += '<div class="toolbar"><div class="section-title'+(j==="oot"||j==="prekursor"?" "+j:"")+'" style="margin:0;"><h3>'+def.label+' <span class="badge-tag mono">'+def.docTitle+'</span></h3><span class="count">'+rows.length+' item</span></div>';
+      html += '<div class="actions"><button type="button" class="btn btn-ghost" data-copy="'+j+'">Salin sebagai tabel</button></div></div>';
+      if (!rows.length){
+        html += '<div class="table-wrap"><table><tbody><tr class="empty-row"><td>Belum ada pesanan '+def.label.toLowerCase()+' bulan ini.</td></tr></tbody></table></div>';
+      } else {
+        html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>'+def.headers.slice(1).join('</th><th>')+'</th><th>Dari</th><th>Selesai</th><th></th></tr></thead><tbody>';
+        rows.forEach(function(it, idx){
+          html += '<tr class="'+(it.selesai?"done":"")+'"><td class="num-col">'+(idx+1)+'</td>';
+          def.cols.forEach(function(col){
+            html += '<td'+(col==="jumlah"?' class="num-col"':'')+'>'+esc(fmtCell(col,it))+'</td>';
+          });
+          html += '<td class="who">'+esc(it.dari)+'</td>';
+          html += '<td><input type="checkbox" class="check" data-done="'+it.id+'" '+(it.selesai?"checked":"")+'></td>';
+          html += '<td><button type="button" class="icon-btn" data-del="'+it.id+'" title="Hapus">✕</button></td></tr>';
+        });
+        html += '</tbody></table></div>';
+      }
+      html += '</div>';
+    });
+    el["review-groups"].innerHTML = html;
+  }
+
+  function wireRowActions(container){
+    container.querySelectorAll("[data-del]").forEach(function(b){
+      b.addEventListener("click", function(){ deleteItem(b.dataset.del); });
+    });
+    container.querySelectorAll("[data-done]").forEach(function(c){
+      c.addEventListener("change", function(){ toggleSelesai(c.dataset.done, c.checked); });
+    });
+    container.querySelectorAll("[data-copy]").forEach(function(b){
+      b.addEventListener("click", async function(){
+        var txt = tsvForJenis(b.dataset.copy);
+        try{
+          await navigator.clipboard.writeText(txt);
+          var old = b.textContent; b.textContent = "Tersalin ✓";
+          setTimeout(function(){ b.textContent = old; }, 1600);
+        }catch(e){
+          alert("Tidak bisa menyalin otomatis. Salin manual dari sini:\n\n" + txt);
+        }
+      });
+    });
+  }
+
+  function renderAll(){
+    renderInputGroups();
+    renderReviewGroups();
+    wireRowActions(el["input-groups"]);
+    wireRowActions(el["review-groups"]);
+  }
+
+  renderAll();
+  updateKatalogHint();
+  loadCatalog();
+  fetchMonth(activeMonth());
+
+  // light polling so changes from other devices show up without a manual refresh
+  setInterval(function(){
+    if (document.visibilityState === "visible" && state.tab !== "katalog"){
+      fetchMonth(activeMonth(), true);
+    }
+  }, 15000);
+
+})();
+</script>
