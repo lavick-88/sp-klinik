@@ -3,58 +3,58 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     color-scheme: light dark;
-    --bg:#F5F6F2;
+    --bg:#EDF0EA;
     --surface:#FFFFFF;
-    --surface-2:#EEF2EF;
-    --ink:#1B2624;
-    --ink-muted:#5C6B67;
-    --line:#D8E0DC;
-    --accent:#0F6E5C;
-    --accent-ink:#FFFFFF;
-    --accent-soft:#E1F0EA;
-    --warn:#92552A;
-    --warn-soft:#F5E7DA;
-    --danger:#9C3B34;
-    --danger-soft:#F5E0DE;
-    --shadow: 0 1px 2px rgba(20,30,28,0.06), 0 4px 14px rgba(20,30,28,0.05);
+    --surface-2:#E2E7E0;
+    --ink:#182420;
+    --ink-muted:#5A6A61;
+    --line:#CBD5C8;
+    --line-strong:#182420;
+    --accent:#1F5C4E;
+    --accent-ink:#F4F8F5;
+    --accent-soft:#DCEAE3;
+    --warn:#8A4A1E;
+    --warn-soft:#F0E1CB;
+    --danger:#8B3A34;
+    --danger-soft:#F1DEDA;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#121816;
+      --bg:#131916;
       --surface:#1B2320;
-      --surface-2:#212B27;
-      --ink:#E8EFEC;
-      --ink-muted:#9FB0AB;
-      --line:#2C3733;
-      --accent:#57C7A6;
-      --accent-ink:#08211B;
-      --accent-soft:#17332B;
-      --warn:#E0A464;
-      --warn-soft:#3A2A18;
-      --danger:#E38079;
+      --surface-2:#212A25;
+      --ink:#E7ECE7;
+      --ink-muted:#96A69C;
+      --line:#333F38;
+      --line-strong:#E7ECE7;
+      --accent:#63BFA2;
+      --accent-ink:#0B1E19;
+      --accent-soft:#1D362E;
+      --warn:#D9A15C;
+      --warn-soft:#3A2A17;
+      --danger:#E08A82;
       --danger-soft:#3A2422;
-      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 6px 20px rgba(0,0,0,0.35);
     }
   }
   :root[data-theme="dark"]{
-    --bg:#121816;
+    --bg:#131916;
     --surface:#1B2320;
-    --surface-2:#212B27;
-    --ink:#E8EFEC;
-    --ink-muted:#9FB0AB;
-    --line:#2C3733;
-    --accent:#57C7A6;
-    --accent-ink:#08211B;
-    --accent-soft:#17332B;
-    --warn:#E0A464;
-    --warn-soft:#3A2A18;
-    --danger:#E38079;
+    --surface-2:#212A25;
+    --ink:#E7ECE7;
+    --ink-muted:#96A69C;
+    --line:#333F38;
+    --line-strong:#E7ECE7;
+    --accent:#63BFA2;
+    --accent-ink:#0B1E19;
+    --accent-soft:#1D362E;
+    --warn:#D9A15C;
+    --warn-soft:#3A2A17;
+    --danger:#E08A82;
     --danger-soft:#3A2422;
-    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 6px 20px rgba(0,0,0,0.35);
   }
 
   *{box-sizing:border-box;}
@@ -62,76 +62,101 @@
   body{
     background:var(--bg);
     color:var(--ink);
-    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    font-family:'Public Sans', system-ui, sans-serif;
     padding-inline:20px;
-    padding-block:28px 60px;
-    max-width:920px;
+    padding-block:0 60px;
+    max-width:960px;
     margin-inline:auto;
     margin-block:0;
   }
-  h1,h2,h3{font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0;}
-  .mono, .num, input[type="number"], .tag-num{font-family:'IBM Plex Mono', ui-monospace, monospace; font-variant-numeric:tabular-nums;}
+  h1,h2,h3{font-family:'Source Serif 4', Georgia, serif; text-wrap:balance; margin:0;}
+  .mono, input[type="number"]{font-family:'IBM Plex Mono', ui-monospace, monospace; font-variant-numeric:tabular-nums;}
+  [hidden]{display:none !important;}
 
-  header.page{
-    display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between;
-    gap:14px; margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--line);
+  /* ---------- letterhead ---------- */
+  header.letterhead{
+    display:flex; align-items:center; gap:16px; padding-block:22px 16px; flex-wrap:wrap;
   }
-  .brand-eyebrow{
-    font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent);
-    font-weight:600; margin:0 0 6px;
+  .mark{ width:42px; height:42px; border-radius:9px; background:var(--accent); position:relative; flex-shrink:0; }
+  .mark::before, .mark::after{ content:""; position:absolute; background:var(--accent-ink); border-radius:1px; }
+  .mark::before{ left:50%; top:10px; bottom:10px; width:8px; transform:translateX(-50%); }
+  .mark::after{ top:50%; left:10px; right:10px; height:8px; transform:translateY(-50%); }
+  .letterhead-text{flex:1; min-width:200px;}
+  .letterhead-text h1{font-size:21px; font-weight:600; letter-spacing:.01em;}
+  .letterhead-text p{margin:3px 0 0; font-size:12.5px; color:var(--ink-muted);}
+  .letterhead-app{
+    font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent);
+    font-weight:700; text-align:right;
   }
-  header.page h1{font-size:26px; font-weight:600; color:var(--ink);}
-  header.page p{margin:6px 0 0; color:var(--ink-muted); font-size:14px; max-width:52ch;}
+  .user-badge{display:flex; align-items:center; gap:9px; margin-top:6px; justify-content:flex-end;}
+  .user-name{font-size:13px; font-weight:600;}
+  .role-chip{
+    font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+    padding:2px 8px; border-radius:3px; border:1px solid var(--accent); color:var(--accent);
+  }
+  .role-chip.asisten{border-color:var(--ink-muted); color:var(--ink-muted);}
+  .btn-logout{
+    background:none; border:none; color:var(--ink-muted); font:inherit; font-size:12px;
+    text-decoration:underline; cursor:pointer; padding:0;
+  }
+  .btn-logout:hover{color:var(--danger);}
+  .letterhead-rules span{display:block;}
+  .letterhead-rules span:first-child{height:3px; background:var(--line-strong);}
+  .letterhead-rules span:last-child{height:1px; background:var(--line-strong); margin-top:3px;}
 
-  nav.tabs{
-    display:flex; gap:6px; background:var(--surface-2); padding:4px; border-radius:10px;
-    width:fit-content; margin-bottom:22px; border:1px solid var(--line);
-  }
+  main{padding-top:22px;}
+
+  /* ---------- tabs ---------- */
+  nav.tabs{display:flex; gap:26px; border-bottom:1px solid var(--line); margin-bottom:24px; flex-wrap:wrap;}
   nav.tabs button{
     appearance:none; border:none; background:transparent; color:var(--ink-muted);
-    font:inherit; font-weight:600; font-size:14px; padding:9px 16px; border-radius:8px;
-    cursor:pointer; transition:background .15s, color .15s;
+    font:inherit; font-weight:600; font-size:14px; padding:9px 1px 11px; cursor:pointer;
+    border-bottom:2px solid transparent; margin-bottom:-1px;
   }
-  nav.tabs button.active{background:var(--surface); color:var(--ink); box-shadow:var(--shadow);}
-  nav.tabs button:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible{
+  nav.tabs button.active{color:var(--ink); border-bottom-color:var(--accent);}
+  button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible{
     outline:2px solid var(--accent); outline-offset:2px;
   }
 
   section.view{display:none;}
   section.view.active{display:block;}
 
-  .card{
-    background:var(--surface); border:1px solid var(--line); border-radius:12px;
-    padding:20px; box-shadow:var(--shadow); margin-bottom:18px;
+  /* ---------- panels ---------- */
+  .panel{
+    background:var(--surface); border:1px solid var(--line); border-radius:5px;
+    padding:20px 22px; margin-bottom:18px;
   }
-  .card h2{font-size:17px; font-weight:600; margin-bottom:4px;}
-  .card .hint{color:var(--ink-muted); font-size:13px; margin:0 0 16px;}
+  .panel h2{font-size:16.5px; font-weight:600; margin-bottom:4px;}
+  .panel .hint{color:var(--ink-muted); font-size:13px; margin:0 0 16px;}
 
   .row{display:flex; gap:14px; flex-wrap:wrap;}
   .field{display:flex; flex-direction:column; gap:6px; flex:1; min-width:150px;}
-  .field label{font-size:12.5px; font-weight:600; color:var(--ink-muted); letter-spacing:.02em;}
+  .field label{font-size:12px; font-weight:600; color:var(--ink-muted); letter-spacing:.02em;}
   .field.grow{flex:2; min-width:220px;}
   .field.narrow{flex:0 0 120px; min-width:100px;}
 
-  input[type="text"], input[type="number"], input[type="month"], select, textarea{
+  input[type="text"], input[type="number"], input[type="month"], input[type="email"], input[type="password"], select, textarea{
     border:1px solid var(--line); background:var(--bg); color:var(--ink);
-    border-radius:8px; padding:9px 11px; font:inherit; font-size:14.5px; width:100%;
+    border-radius:4px; padding:9px 11px; font:inherit; font-size:14.5px; width:100%;
   }
   textarea{resize:vertical; min-height:38px;}
 
-  .jenis-picker{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;}
+  /* ---------- jenis register-tabs ---------- */
+  .jenis-picker{display:flex; gap:0; flex-wrap:wrap; margin-bottom:18px; border:1px solid var(--line); border-radius:5px; overflow:hidden;}
   .jenis-btn{
-    border:1px solid var(--line); background:var(--surface-2); color:var(--ink);
-    padding:9px 14px; border-radius:999px; font:inherit; font-size:13.5px; font-weight:600;
-    cursor:pointer; display:flex; align-items:center; gap:6px;
+    flex:1; min-width:130px; border:none; border-right:1px solid var(--line); background:var(--surface);
+    color:var(--ink-muted); padding:9px 12px; font:inherit; cursor:pointer; text-align:left;
+    border-left:3px solid transparent;
   }
-  .jenis-btn .dot{width:7px; height:7px; border-radius:50%; background:var(--ink-muted);}
-  .jenis-btn.active{background:var(--accent-soft); border-color:var(--accent); color:var(--accent);}
-  .jenis-btn.active .dot{background:var(--accent);}
+  .jenis-btn:last-child{border-right:none;}
+  .jenis-btn .jenis-code{display:block; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.04em; font-weight:600;}
+  .jenis-btn .jenis-name{display:block; font-size:13px; font-weight:600; color:var(--ink); margin-top:2px;}
+  .jenis-btn.active{background:var(--accent-soft); border-left-color:var(--accent);}
+  .jenis-btn.active .jenis-code{color:var(--accent);}
   .jenis-btn[data-jenis="oot"].active, .jenis-btn[data-jenis="prekursor"].active{
-    background:var(--warn-soft); border-color:var(--warn); color:var(--warn);
+    background:var(--warn-soft); border-left-color:var(--warn);
   }
-  .jenis-btn[data-jenis="oot"].active .dot, .jenis-btn[data-jenis="prekursor"].active .dot{background:var(--warn);}
+  .jenis-btn[data-jenis="oot"].active .jenis-code, .jenis-btn[data-jenis="prekursor"].active .jenis-code{color:var(--warn);}
 
   .extra-fields{display:none;}
   .extra-fields.show{display:flex;}
@@ -140,24 +165,24 @@
   .field-hint{margin:2px 0 0; font-size:11.5px; color:var(--ink-muted);}
   .suggest-list{
     position:absolute; top:calc(100% + 2px); left:0; right:0; z-index:30;
-    background:var(--surface); border:1px solid var(--line); border-radius:9px;
-    box-shadow:var(--shadow); list-style:none; margin:0; padding:5px; max-height:240px; overflow-y:auto;
+    background:var(--surface); border:1px solid var(--line); border-radius:4px;
+    box-shadow:0 6px 18px rgba(0,0,0,.12); list-style:none; margin:0; padding:4px; max-height:240px; overflow-y:auto;
   }
   .suggest-list li{
-    padding:8px 10px; border-radius:6px; cursor:pointer; font-size:14px;
+    padding:8px 10px; border-radius:3px; cursor:pointer; font-size:14px;
     display:flex; align-items:baseline; justify-content:space-between; gap:10px;
   }
-  .suggest-list li .meta{color:var(--ink-muted); font-size:11.5px; white-space:nowrap; flex-shrink:0;}
+  .suggest-list li .meta{color:var(--ink-muted); font-size:11.5px; white-space:nowrap; flex-shrink:0; font-family:'IBM Plex Mono',monospace;}
   .suggest-list li:hover, .suggest-list li.hi{background:var(--accent-soft); color:var(--accent);}
   .suggest-list li:hover .meta, .suggest-list li.hi .meta{color:var(--accent);}
 
   .btn{
-    appearance:none; border:none; border-radius:8px; padding:10px 18px; font:inherit;
+    appearance:none; border:1px solid transparent; border-radius:4px; padding:10px 18px; font:inherit;
     font-weight:600; font-size:14px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
   }
   .btn-primary{background:var(--accent); color:var(--accent-ink);}
   .btn-primary:disabled{opacity:.5; cursor:not-allowed;}
-  .btn-ghost{background:transparent; color:var(--ink-muted); border:1px solid var(--line);}
+  .btn-ghost{background:transparent; color:var(--ink-muted); border-color:var(--line);}
   .btn-ghost:hover{color:var(--ink); border-color:var(--ink-muted);}
   .btn-row{display:flex; justify-content:flex-end; margin-top:14px;}
 
@@ -165,50 +190,46 @@
   .status-line.error{color:var(--danger);}
   .status-line.ok{color:var(--accent);}
 
-  .section-title{
-    display:flex; align-items:baseline; justify-content:space-between; gap:10px;
-    margin:26px 0 10px;
-  }
-  .section-title h3{font-size:16px; font-weight:600;}
+  .section-title{display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin:26px 0 10px;}
+  .section-title h3{font-size:15.5px; font-weight:600;}
   .count{
-    font-size:12.5px; color:var(--ink-muted); background:var(--surface-2);
-    border-radius:999px; padding:2px 10px; font-family:'IBM Plex Mono',monospace; white-space:nowrap;
+    font-size:12px; color:var(--ink-muted); border:1px solid var(--line);
+    border-radius:3px; padding:2px 9px; font-family:'IBM Plex Mono',monospace; white-space:nowrap;
   }
   .section-title.oot h3, .section-title.prekursor h3{color:var(--warn);}
 
-  .table-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:10px; background:var(--surface);}
+  .table-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:5px;}
   table{width:100%; border-collapse:collapse; font-size:13.5px; min-width:560px;}
   thead th{
-    text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em;
+    text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.04em;
     color:var(--ink-muted); background:var(--surface-2); padding:9px 10px; border-bottom:1px solid var(--line);
     white-space:nowrap;
   }
-  tbody td{padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
+  tbody td{padding:9px 10px; border-bottom:1px solid var(--line); border-left:1px solid var(--line); vertical-align:top; background:var(--surface);}
+  tbody td:first-child{border-left:none;}
+  thead th:not(:first-child), tbody td:not(:first-child){border-left:1px solid var(--line);}
   tbody tr:last-child td{border-bottom:none;}
   tbody tr.done td{color:var(--ink-muted); text-decoration:line-through; text-decoration-color:var(--line);}
   td.num-col{font-family:'IBM Plex Mono',monospace; text-align:right; white-space:nowrap;}
   td.who{font-size:12px; color:var(--ink-muted); white-space:nowrap;}
-  .empty-row td{text-align:center; color:var(--ink-muted); font-style:italic; padding:20px;}
+  .empty-row td{text-align:center; color:var(--ink-muted); font-style:italic; padding:20px; border-left:none;}
 
   td.k-cell{padding:5px 6px;}
   .k-input{
     width:100%; min-width:110px; border:1px solid transparent; background:transparent; color:var(--ink);
-    border-radius:6px; padding:6px 7px; font:inherit; font-size:13.5px;
+    border-radius:3px; padding:6px 7px; font:inherit; font-size:13.5px;
   }
   .k-input:hover{border-color:var(--line);}
-  .k-input:focus{border-color:var(--accent); background:var(--surface); outline:none;}
+  .k-input:focus{border-color:var(--accent); background:var(--bg); outline:none;}
   .k-input.dirty{border-color:var(--warn); background:var(--warn-soft);}
   .k-actions{display:flex; gap:4px; white-space:nowrap;}
   .k-save{
-    background:var(--accent-soft); color:var(--accent); border:none; border-radius:6px;
+    background:var(--accent-soft); color:var(--accent); border:none; border-radius:3px;
     padding:6px 10px; font:inherit; font-size:12.5px; font-weight:600; cursor:pointer;
   }
   .k-save:disabled{opacity:.4; cursor:default;}
 
-  .icon-btn{
-    background:none; border:none; cursor:pointer; color:var(--ink-muted); padding:4px; border-radius:6px;
-    font-size:15px; line-height:1;
-  }
+  .icon-btn{background:none; border:none; cursor:pointer; color:var(--ink-muted); padding:4px; border-radius:4px; font-size:15px; line-height:1;}
   .icon-btn:hover{color:var(--danger); background:var(--danger-soft);}
   .check{width:16px; height:16px; accent-color:var(--accent); cursor:pointer;}
 
@@ -216,175 +237,218 @@
   .toolbar .actions{display:flex; gap:8px; flex-wrap:wrap;}
 
   .badge-tag{
-    font-size:11px; font-weight:700; letter-spacing:.03em; text-transform:uppercase;
-    padding:2px 8px; border-radius:999px; background:var(--surface-2); color:var(--ink-muted);
+    font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; font-family:'IBM Plex Mono',monospace;
+    padding:2px 7px; border-radius:3px; border:1px solid var(--line); color:var(--ink-muted);
   }
   .banner{
-    background:var(--danger-soft); border:1px solid var(--danger); color:var(--danger); border-radius:10px; padding:14px 16px;
+    background:var(--danger-soft); border:1px solid var(--danger); color:var(--danger); border-radius:5px; padding:14px 16px;
     font-size:13.5px; margin-bottom:18px;
   }
-  footer.note{margin-top:30px; font-size:12.5px; color:var(--ink-muted); text-align:center;}
+  footer.note{margin-top:34px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-muted); text-align:center;}
+
+  /* ---------- login ---------- */
+  .login-shell{display:flex; justify-content:center; padding-block:40px;}
+  .login-panel{width:100%; max-width:380px;}
+  .login-panel .btn-row{justify-content:stretch;}
+  .login-panel .btn-primary{width:100%; justify-content:center;}
 
   @media (max-width:560px){
-    header.page{flex-direction:column; align-items:flex-start;}
+    header.letterhead{flex-direction:column; align-items:flex-start;}
+    .letterhead-app{text-align:left;}
+    .user-badge{justify-content:flex-start;}
     .field{min-width:100%;}
     table{min-width:520px;}
   }
 </style>
 
-<header class="page">
+<header class="letterhead">
+  <div class="mark" aria-hidden="true"></div>
+  <div class="letterhead-text">
+    <h1>Klinik Surya Giri Jaya Cerme</h1>
+    <p>Jl. Cerme Kidul Gang II No. 03, Cerme Gresik &middot; Telp. (031) 7994302</p>
+  </div>
   <div>
-    <p class="brand-eyebrow">Klinik Surya Giri Jaya Cerme</p>
-    <h1>SP Klinik Cerme</h1>
-    <p>Loket pesanan obat &amp; BMHP dari asisten apoteker, untuk direkap apoteker penanggung jawab sebelum dibuatkan Surat Pesanan.</p>
+    <p class="letterhead-app">Loket Surat Pesanan</p>
+    <div class="user-badge" id="user-badge" hidden>
+      <span class="user-name" id="user-name"></span>
+      <span class="role-chip" id="user-role"></span>
+      <button type="button" class="btn-logout" id="btn-logout">Keluar</button>
+    </div>
   </div>
 </header>
+<div class="letterhead-rules"><span></span><span></span></div>
 
-<nav class="tabs" role="tablist">
-  <button type="button" class="active" data-tab="input" role="tab">Input Pesanan</button>
-  <button type="button" data-tab="review" role="tab">Riwayat &amp; Review</button>
-  <button type="button" data-tab="katalog" role="tab">Database Obat</button>
-</nav>
-
+<main>
 <div id="db-banner" class="banner" hidden></div>
 
-<!-- ============ INPUT TAB ============ -->
-<section class="view active" id="view-input">
-  <div class="card">
-    <h2>Data pengirim &amp; bulan pesanan</h2>
-    <p class="hint">Diisi sekali, akan diingat di perangkat ini.</p>
-    <div class="row">
-      <div class="field grow">
-        <label for="dari">Nama asisten apoteker</label>
-        <input type="text" id="dari" placeholder="mis. Rina">
+<!-- ============ LOGIN ============ -->
+<section class="view active" id="view-login">
+  <div class="login-shell">
+    <div class="panel login-panel">
+      <h2>Masuk</h2>
+      <p class="hint">Gunakan akun yang didaftarkan oleh apoteker penanggung jawab.</p>
+      <div class="row">
+        <div class="field grow">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" autocomplete="username">
+        </div>
       </div>
-      <div class="field narrow">
-        <label for="bulan-input">Bulan pesanan</label>
-        <input type="month" id="bulan-input">
+      <div class="row" style="margin-top:14px;">
+        <div class="field grow">
+          <label for="login-password">Kata sandi</label>
+          <input type="password" id="login-password" autocomplete="current-password">
+        </div>
       </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Tambah item pesanan</h2>
-    <p class="hint">Pilih jenis SP dulu &mdash; kolom yang diminta menyesuaikan otomatis.</p>
-
-    <div class="jenis-picker" id="jenis-picker">
-      <button type="button" class="jenis-btn active" data-jenis="reguler"><span class="dot"></span>Obat Reguler</button>
-      <button type="button" class="jenis-btn" data-jenis="bmhp"><span class="dot"></span>BMHP</button>
-      <button type="button" class="jenis-btn" data-jenis="oot"><span class="dot"></span>Obat Tertentu (OOT)</button>
-      <button type="button" class="jenis-btn" data-jenis="prekursor"><span class="dot"></span>Prekursor</button>
-    </div>
-
-    <div class="row">
-      <div class="field grow field-autocomplete">
-        <label for="nama_obat">Nama obat</label>
-        <input type="text" id="nama_obat" placeholder="Ketik untuk mencari&hellip;" autocomplete="off">
-        <ul class="suggest-list" id="nama-suggest" hidden></ul>
-        <p class="field-hint" id="katalog-hint"></p>
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" id="btn-login">Masuk</button>
       </div>
-      <div class="field narrow">
-        <label for="satuan">Satuan</label>
-        <input type="text" id="satuan" placeholder="Box" list="satuan-list">
-        <datalist id="satuan-list">
-          <option value="Box"><option value="Botol"><option value="Tube"><option value="Strip">
-          <option value="Ampul"><option value="Vial"><option value="Pcs"><option value="Sachet">
-        </datalist>
-      </div>
-      <div class="field narrow">
-        <label for="jumlah">Jumlah</label>
-        <input type="number" id="jumlah" min="0" step="1" placeholder="0">
-      </div>
+      <p class="status-line" id="login-status"></p>
+      <p class="hint" style="margin-top:10px;">Belum punya akun? Hubungi apoteker penanggung jawab untuk didaftarkan.</p>
     </div>
-
-    <div class="row extra-fields" id="fields-bentuk">
-      <div class="field grow">
-        <label for="bentuk_kekuatan">Bentuk &amp; kekuatan sediaan</label>
-        <input type="text" id="bentuk_kekuatan" placeholder="mis. Tablet 15 mg">
-      </div>
-    </div>
-    <div class="row extra-fields" id="fields-zat">
-      <div class="field grow">
-        <label for="zat_aktif">Zat aktif prekursor</label>
-        <input type="text" id="zat_aktif" placeholder="mis. Pseudoefedrin HCl">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="field grow">
-        <label for="keterangan">Catatan / keterangan (opsional)</label>
-        <textarea id="keterangan" rows="1" placeholder="mis. stok kosong total, isi 100 tablet/box, dsb."></textarea>
-      </div>
-    </div>
-
-    <div class="btn-row">
-      <button type="button" class="btn btn-primary" id="btn-tambah">Tambahkan ke daftar</button>
-    </div>
-    <p class="status-line" id="input-status"></p>
-  </div>
-
-  <div class="card" id="input-list-card">
-    <div class="toolbar">
-      <h2>Pesanan bulan ini &mdash; <span id="bulan-label-input">&ndash;</span></h2>
-    </div>
-    <p class="hint">Semua item yang sudah ditambahkan siapa pun untuk bulan ini.</p>
-    <div id="input-groups"></div>
   </div>
 </section>
 
-<!-- ============ REVIEW TAB ============ -->
-<section class="view" id="view-review">
-  <div class="card">
-    <div class="toolbar">
-      <div class="field narrow" style="min-width:150px;">
-        <label for="bulan-review">Bulan direview</label>
-        <input type="month" id="bulan-review">
-      </div>
-      <div class="actions">
-        <button type="button" class="btn btn-ghost" id="btn-clear-done">Hapus yang sudah selesai</button>
-      </div>
-    </div>
-  </div>
-  <div id="review-groups"></div>
-</section>
+<!-- ============ APP SHELL ============ -->
+<div id="app-shell" hidden>
+  <nav class="tabs" role="tablist">
+    <button type="button" class="active" data-tab="input" role="tab">Input Pesanan</button>
+    <button type="button" data-tab="review" role="tab">Riwayat &amp; Review</button>
+    <button type="button" data-tab="katalog" role="tab">Database Obat</button>
+  </nav>
 
-<!-- ============ DATABASE OBAT TAB ============ -->
-<section class="view" id="view-katalog">
-  <div class="card">
-    <h2>Database obat</h2>
-    <p class="hint">Perbaiki ejaan yang mirip/duplikat, lengkapi satuan yang kosong, atau hapus yang sudah tidak dipakai. Perubahan langsung berlaku untuk pencarian di tab Input Pesanan.</p>
-    <div class="jenis-picker" id="katalog-jenis-picker">
-      <button type="button" class="jenis-btn active" data-jenis="reguler"><span class="dot"></span>Obat Reguler</button>
-      <button type="button" class="jenis-btn" data-jenis="bmhp"><span class="dot"></span>BMHP</button>
-      <button type="button" class="jenis-btn" data-jenis="oot"><span class="dot"></span>Obat Tertentu (OOT)</button>
-      <button type="button" class="jenis-btn" data-jenis="prekursor"><span class="dot"></span>Prekursor</button>
-    </div>
-    <div class="row">
-      <div class="field grow">
-        <label for="katalog-search">Cari dalam daftar</label>
-        <input type="text" id="katalog-search" placeholder="Ketik nama obat untuk menyaring&hellip;">
+  <!-- ============ INPUT TAB ============ -->
+  <section class="view active" id="view-input">
+    <div class="panel">
+      <h2>Bulan pesanan</h2>
+      <p class="hint">Item yang ditambahkan akan tercatat atas nama akun yang sedang masuk.</p>
+      <div class="row">
+        <div class="field narrow">
+          <label for="bulan-input">Bulan</label>
+          <input type="month" id="bulan-input">
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="card">
-    <h2>Tambah entri baru</h2>
-    <p class="hint">Untuk obat yang belum pernah dipesan lewat aplikasi ini.</p>
-    <div class="row" id="katalog-add-row"></div>
-    <div class="btn-row">
-      <button type="button" class="btn btn-primary" id="btn-katalog-add">Tambahkan ke database</button>
-    </div>
-    <p class="status-line" id="katalog-status"></p>
-  </div>
+    <div class="panel">
+      <h2>Tambah item pesanan</h2>
+      <p class="hint">Pilih jenis SP dulu &mdash; kolom yang diminta menyesuaikan otomatis.</p>
 
-  <div class="card">
-    <div class="toolbar">
-      <h2 style="margin:0;">Daftar &mdash; <span id="katalog-jenis-label"></span></h2>
-      <span class="count" id="katalog-count">0 obat</span>
+      <div class="jenis-picker" id="jenis-picker">
+        <button type="button" class="jenis-btn active" data-jenis="reguler"><span class="jenis-code">SP KOSONGAN</span><span class="jenis-name">Obat Reguler</span></button>
+        <button type="button" class="jenis-btn" data-jenis="bmhp"><span class="jenis-code">SP KOSONGAN &middot; BMHP</span><span class="jenis-name">Bahan Medis Habis Pakai</span></button>
+        <button type="button" class="jenis-btn" data-jenis="oot"><span class="jenis-code">SP OOT</span><span class="jenis-name">Obat Tertentu</span></button>
+        <button type="button" class="jenis-btn" data-jenis="prekursor"><span class="jenis-code">SP PREKURSOR</span><span class="jenis-name">Prekursor Farmasi</span></button>
+      </div>
+
+      <div class="row">
+        <div class="field grow field-autocomplete">
+          <label for="nama_obat">Nama obat</label>
+          <input type="text" id="nama_obat" placeholder="Ketik untuk mencari&hellip;" autocomplete="off">
+          <ul class="suggest-list" id="nama-suggest" hidden></ul>
+          <p class="field-hint" id="katalog-hint"></p>
+        </div>
+        <div class="field narrow">
+          <label for="satuan">Satuan</label>
+          <input type="text" id="satuan" placeholder="Box" list="satuan-list">
+          <datalist id="satuan-list">
+            <option value="Box"><option value="Botol"><option value="Tube"><option value="Strip">
+            <option value="Ampul"><option value="Vial"><option value="Pcs"><option value="Sachet">
+          </datalist>
+        </div>
+        <div class="field narrow">
+          <label for="jumlah">Jumlah</label>
+          <input type="number" id="jumlah" min="0" step="1" placeholder="0">
+        </div>
+      </div>
+
+      <div class="row extra-fields" id="fields-bentuk">
+        <div class="field grow">
+          <label for="bentuk_kekuatan">Bentuk &amp; kekuatan sediaan</label>
+          <input type="text" id="bentuk_kekuatan" placeholder="mis. Tablet 15 mg">
+        </div>
+      </div>
+      <div class="row extra-fields" id="fields-zat">
+        <div class="field grow">
+          <label for="zat_aktif">Zat aktif prekursor</label>
+          <input type="text" id="zat_aktif" placeholder="mis. Pseudoefedrin HCl">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field grow">
+          <label for="keterangan">Catatan / keterangan (opsional)</label>
+          <textarea id="keterangan" rows="1" placeholder="mis. stok kosong total, isi 100 tablet/box, dsb."></textarea>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" id="btn-tambah">Tambahkan ke daftar</button>
+      </div>
+      <p class="status-line" id="input-status"></p>
     </div>
-    <div id="katalog-table-wrap"></div>
-  </div>
-</section>
+
+    <div class="panel">
+      <div class="toolbar"><h2>Pesanan bulan ini &mdash; <span id="bulan-label-input">&ndash;</span></h2></div>
+      <p class="hint">Semua item yang sudah ditambahkan siapa pun untuk bulan ini.</p>
+      <div id="input-groups"></div>
+    </div>
+  </section>
+
+  <!-- ============ REVIEW TAB ============ -->
+  <section class="view" id="view-review">
+    <div class="panel">
+      <div class="toolbar">
+        <div class="field narrow" style="min-width:150px;">
+          <label for="bulan-review">Bulan direview</label>
+          <input type="month" id="bulan-review">
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-ghost" id="btn-clear-done">Hapus yang sudah selesai</button>
+        </div>
+      </div>
+    </div>
+    <div id="review-groups"></div>
+  </section>
+
+  <!-- ============ DATABASE OBAT TAB ============ -->
+  <section class="view" id="view-katalog">
+    <div class="panel">
+      <h2>Database obat</h2>
+      <p class="hint">Perbaiki ejaan yang mirip/duplikat, lengkapi satuan yang kosong, atau hapus yang sudah tidak dipakai. Perubahan langsung berlaku untuk pencarian di tab Input Pesanan.</p>
+      <div class="jenis-picker" id="katalog-jenis-picker">
+        <button type="button" class="jenis-btn active" data-jenis="reguler"><span class="jenis-code">SP KOSONGAN</span><span class="jenis-name">Obat Reguler</span></button>
+        <button type="button" class="jenis-btn" data-jenis="bmhp"><span class="jenis-code">SP KOSONGAN &middot; BMHP</span><span class="jenis-name">Bahan Medis Habis Pakai</span></button>
+        <button type="button" class="jenis-btn" data-jenis="oot"><span class="jenis-code">SP OOT</span><span class="jenis-name">Obat Tertentu</span></button>
+        <button type="button" class="jenis-btn" data-jenis="prekursor"><span class="jenis-code">SP PREKURSOR</span><span class="jenis-name">Prekursor Farmasi</span></button>
+      </div>
+      <div class="row">
+        <div class="field grow">
+          <label for="katalog-search">Cari dalam daftar</label>
+          <input type="text" id="katalog-search" placeholder="Ketik nama obat untuk menyaring&hellip;">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Tambah entri baru</h2>
+      <p class="hint">Untuk obat yang belum pernah dipesan lewat aplikasi ini.</p>
+      <div class="row" id="katalog-add-row"></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" id="btn-katalog-add">Tambahkan ke database</button>
+      </div>
+      <p class="status-line" id="katalog-status"></p>
+    </div>
+
+    <div class="panel">
+      <div class="toolbar">
+        <h2 style="margin:0;">Daftar &mdash; <span id="katalog-jenis-label"></span></h2>
+        <span class="count" id="katalog-count">0 obat</span>
+      </div>
+      <div id="katalog-table-wrap"></div>
+    </div>
+  </section>
+</div>
+</main>
 
 <footer class="note">Data tersimpan di Supabase &middot; Klinik Surya Giri Jaya Cerme</footer>
 
@@ -429,7 +493,6 @@
   }
   function errMsg(e){ return (e && e.message) ? e.message : String(e); }
 
-  // --- Indonesian number-to-words (small, practical range for order quantities) ---
   var SATUAN_KATA = ["","satu","dua","tiga","empat","lima","enam","tujuh","delapan","sembilan"];
   function terbilang(n){
     n = Math.round(n);
@@ -444,8 +507,16 @@
     return String(n);
   }
   function capitalize(s){ return s.replace(/\S+/g, function(w){ return w.charAt(0).toUpperCase()+w.slice(1); }); }
+  function esc(s){
+    return String(s==null?"":s).replace(/[&<>]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]; });
+  }
 
-  // --- state ---
+  // --- auth state ---
+  var session = null;
+  var profile = null;
+  function isAdmin(){ return !!(profile && profile.role === "admin"); }
+
+  // --- app state ---
   var state = {
     tab: "input",
     jenis: "reguler",
@@ -466,19 +537,91 @@
   }
 
   var el = {};
-  ["dari","bulan-input","bulan-review","nama_obat","satuan","jumlah","bentuk_kekuatan","zat_aktif",
+  ["bulan-input","bulan-review","nama_obat","satuan","jumlah","bentuk_kekuatan","zat_aktif",
    "keterangan","btn-tambah","input-status","input-groups","bulan-label-input","review-groups",
    "fields-bentuk","fields-zat","jenis-picker","btn-clear-done","nama-suggest","katalog-hint"
   ].forEach(function(id){ el[id] = document.getElementById(id); });
 
-  // restore local convenience prefs
-  try{
-    var savedName = localStorage.getItem("spcerme_nama");
-    if (savedName) el.dari.value = savedName;
-  }catch(e){}
-
   el["bulan-input"].value = state.monthInput;
   el["bulan-review"].value = state.monthReview;
+
+  // ================= AUTH =================
+  document.getElementById("btn-login").addEventListener("click", doLogin);
+  document.getElementById("login-password").addEventListener("keydown", function(e){ if (e.key === "Enter") doLogin(); });
+  document.getElementById("btn-logout").addEventListener("click", function(){ sb.auth.signOut(); });
+
+  async function doLogin(){
+    var email = document.getElementById("login-email").value.trim();
+    var pass = document.getElementById("login-password").value;
+    var statusEl = document.getElementById("login-status");
+    if (!email || !pass){
+      statusEl.textContent = "Isi email dan kata sandi.";
+      statusEl.className = "status-line error";
+      return;
+    }
+    document.getElementById("btn-login").disabled = true;
+    statusEl.textContent = "Memeriksa…";
+    statusEl.className = "status-line";
+    var res = await sb.auth.signInWithPassword({ email: email, password: pass });
+    document.getElementById("btn-login").disabled = false;
+    if (res.error){
+      statusEl.textContent = "Email atau kata sandi salah.";
+      statusEl.className = "status-line error";
+    }
+  }
+
+  function showLogin(){
+    document.getElementById("view-login").classList.add("active");
+    document.getElementById("app-shell").hidden = true;
+    document.getElementById("user-badge").hidden = true;
+    document.getElementById("login-password").value = "";
+  }
+
+  async function afterLogin(){
+    var res = await sb.from("profiles").select("*").eq("id", session.user.id).single();
+    profile = (res.data) || { nama: session.user.email, role: "asisten" };
+    document.getElementById("view-login").classList.remove("active");
+    document.getElementById("app-shell").hidden = false;
+    document.getElementById("user-badge").hidden = false;
+    document.getElementById("user-name").textContent = profile.nama || session.user.email;
+    var roleEl = document.getElementById("user-role");
+    roleEl.textContent = isAdmin() ? "Apoteker" : "Asisten";
+    roleEl.className = "role-chip" + (isAdmin() ? "" : " asisten");
+    document.body.classList.toggle("is-admin", isAdmin());
+
+    renderAll();
+    updateKatalogHint();
+    loadCatalog();
+    fetchMonth(activeMonth());
+    startPolling();
+  }
+
+  var pollStarted = false;
+  function startPolling(){
+    if (pollStarted) return;
+    pollStarted = true;
+    setInterval(function(){
+      if (session && document.visibilityState === "visible" && state.tab !== "katalog"){
+        fetchMonth(activeMonth(), true);
+      }
+    }, 15000);
+  }
+
+  (async function initAuth(){
+    try{
+      var res = await sb.auth.getSession();
+      session = res.data.session;
+      if (session) await afterLogin(); else showLogin();
+    }catch(e){
+      showBanner("Gagal memeriksa sesi login: " + errMsg(e));
+      showLogin();
+    }
+    sb.auth.onAuthStateChange(function(event, s){
+      session = s;
+      if (event === "SIGNED_IN") afterLogin();
+      if (event === "SIGNED_OUT"){ profile = null; showLogin(); }
+    });
+  })();
 
   // --- tabs ---
   document.querySelectorAll("nav.tabs button").forEach(function(btn){
@@ -489,11 +632,7 @@
       document.getElementById("view-input").classList.toggle("active", state.tab==="input");
       document.getElementById("view-review").classList.toggle("active", state.tab==="review");
       document.getElementById("view-katalog").classList.toggle("active", state.tab==="katalog");
-      if (state.tab === "katalog"){
-        loadCatalog();
-      } else {
-        fetchMonth(activeMonth());
-      }
+      if (state.tab === "katalog") loadCatalog(); else fetchMonth(activeMonth());
     });
   });
 
@@ -512,7 +651,7 @@
     hideSuggest();
   });
 
-  // --- katalog (master drug database) ---
+  // ================= KATALOG (search + master data) =================
   async function loadCatalog(){
     try{
       var res = await sb.from("katalog_obat").select("*").order("nama_obat", { ascending: true });
@@ -567,10 +706,7 @@
     matches = matches.slice(0, 8);
     state.suggestItems = matches;
     state.suggestHi = -1;
-    if (!matches.length){
-      hideSuggest();
-      return;
-    }
+    if (!matches.length){ hideSuggest(); return; }
     el["nama-suggest"].innerHTML = matches.map(function(m, i){
       return '<li data-i="'+i+'"><span>'+esc(m.nama_obat)+'</span><span class="meta">'+esc(m.satuan||"")+'</span></li>';
     }).join("");
@@ -592,25 +728,13 @@
   el.nama_obat.addEventListener("focus", function(){ if (el.nama_obat.value.trim()) renderSuggest(el.nama_obat.value); });
   el.nama_obat.addEventListener("keydown", function(e){
     if (el["nama-suggest"].hidden) return;
-    if (e.key === "ArrowDown"){
-      e.preventDefault();
-      state.suggestHi = Math.min(state.suggestHi + 1, state.suggestItems.length - 1);
-      highlightSuggest();
-    } else if (e.key === "ArrowUp"){
-      e.preventDefault();
-      state.suggestHi = Math.max(state.suggestHi - 1, 0);
-      highlightSuggest();
-    } else if (e.key === "Enter"){
-      if (state.suggestHi >= 0){ e.preventDefault(); pickSuggestion(state.suggestHi); }
-      else hideSuggest();
-    } else if (e.key === "Escape"){
-      hideSuggest();
-    }
+    if (e.key === "ArrowDown"){ e.preventDefault(); state.suggestHi = Math.min(state.suggestHi + 1, state.suggestItems.length - 1); highlightSuggest(); }
+    else if (e.key === "ArrowUp"){ e.preventDefault(); state.suggestHi = Math.max(state.suggestHi - 1, 0); highlightSuggest(); }
+    else if (e.key === "Enter"){ if (state.suggestHi >= 0){ e.preventDefault(); pickSuggestion(state.suggestHi); } else hideSuggest(); }
+    else if (e.key === "Escape"){ hideSuggest(); }
   });
   function highlightSuggest(){
-    Array.prototype.forEach.call(el["nama-suggest"].children, function(li, i){
-      li.classList.toggle("hi", i === state.suggestHi);
-    });
+    Array.prototype.forEach.call(el["nama-suggest"].children, function(li, i){ li.classList.toggle("hi", i === state.suggestHi); });
   }
   el["nama-suggest"].addEventListener("mousedown", function(e){
     var li = e.target.closest("li[data-i]");
@@ -632,22 +756,17 @@
     try{
       var res = await sb.from("katalog_obat").insert([payload]).select();
       if (res.error) throw res.error;
-      if (res.data && res.data[0]){
-        state.catalog[jenis] = state.catalog[jenis].concat([res.data[0]]);
-        updateKatalogHint();
-      }
-    }catch(e){ /* best-effort; not fatal if this fails */ }
+      if (res.data && res.data[0]){ state.catalog[jenis] = state.catalog[jenis].concat([res.data[0]]); updateKatalogHint(); }
+    }catch(e){ /* best-effort */ }
   }
 
-  // --- Database Obat (katalog manage) tab ---
+  // ================= DATABASE OBAT TAB (manage) =================
   var katalogEl = {};
   ["katalog-jenis-picker","katalog-search","katalog-add-row","btn-katalog-add","katalog-status",
    "katalog-jenis-label","katalog-count","katalog-table-wrap"
   ].forEach(function(id){ katalogEl[id] = document.getElementById(id); });
 
-  function katalogFields(jenis){
-    return JENIS_DEF[jenis].cols.filter(function(c){ return c !== "jumlah"; });
-  }
+  function katalogFields(jenis){ return JENIS_DEF[jenis].cols.filter(function(c){ return c !== "jumlah"; }); }
 
   katalogEl["katalog-jenis-picker"].addEventListener("click", function(e){
     var b = e.target.closest(".jenis-btn");
@@ -729,25 +848,33 @@
       return;
     }
 
+    var admin = isAdmin();
     var headerCells = fields.map(function(f){ return "<th>"+esc(COL_LABEL[f])+"</th>"; }).join("");
-    var html = '<div class="table-wrap"><table><thead><tr>'+headerCells+'<th></th><th></th></tr></thead><tbody>';
+    var html = '<div class="table-wrap"><table><thead><tr>'+headerCells+(admin ? '<th></th><th></th>' : '')+'</tr></thead><tbody>';
     rows.forEach(function(it){
       html += '<tr data-id="'+it.id+'">';
       fields.forEach(function(f){
-        html += '<td class="k-cell"><input class="k-input" data-field="'+f+'" value="'+esc(it[f]||"")+'"></td>';
+        if (admin){
+          html += '<td class="k-cell"><input class="k-input" data-field="'+f+'" value="'+esc(it[f]||"")+'"></td>';
+        } else {
+          html += '<td>'+esc(it[f]||"")+'</td>';
+        }
       });
-      html += '<td class="k-actions"><button type="button" class="k-save" data-id="'+it.id+'" disabled>Simpan</button></td>';
-      html += '<td><button type="button" class="icon-btn k-del" data-id="'+it.id+'" title="Hapus">✕</button></td>';
+      if (admin){
+        html += '<td class="k-actions"><button type="button" class="k-save" data-id="'+it.id+'" disabled>Simpan</button></td>';
+        html += '<td><button type="button" class="icon-btn k-del" data-id="'+it.id+'" title="Hapus">✕</button></td>';
+      }
       html += '</tr>';
     });
     html += '</tbody></table></div>';
     katalogEl["katalog-table-wrap"].innerHTML = html;
 
+    if (!admin) return;
+
     katalogEl["katalog-table-wrap"].querySelectorAll(".k-input").forEach(function(inp){
       inp.addEventListener("input", function(){
         inp.classList.add("dirty");
-        var tr = inp.closest("tr");
-        tr.querySelector(".k-save").disabled = false;
+        inp.closest("tr").querySelector(".k-save").disabled = false;
       });
     });
     katalogEl["katalog-table-wrap"].querySelectorAll(".k-save").forEach(function(btn){
@@ -755,10 +882,7 @@
         var id = btn.dataset.id;
         var tr = btn.closest("tr");
         var updated = {};
-        tr.querySelectorAll(".k-input").forEach(function(inp){
-          var v = inp.value.trim();
-          updated[inp.dataset.field] = v || null;
-        });
+        tr.querySelectorAll(".k-input").forEach(function(inp){ updated[inp.dataset.field] = inp.value.trim() || null; });
         if (!updated.nama_obat){ alert("Nama obat tidak boleh kosong."); return; }
         btn.disabled = true; btn.textContent = "Menyimpan…";
         try{
@@ -787,14 +911,12 @@
           if (res.error) throw res.error;
           state.catalog[jenis] = state.catalog[jenis].filter(function(x){ return String(x.id) !== String(id); });
           renderKatalogTab();
-        }catch(e){
-          alert("Gagal menghapus: " + errMsg(e));
-        }
+        }catch(e){ alert("Gagal menghapus: " + errMsg(e)); }
       });
     });
   }
 
-  // --- month inputs ---
+  // ================= PESANAN (orders) =================
   el["bulan-input"].addEventListener("change", function(){
     state.monthInput = el["bulan-input"].value || currentMonthStr();
     if (state.tab === "input") fetchMonth(state.monthInput);
@@ -810,12 +932,10 @@
     el["input-status"].textContent = msg || "";
     el["input-status"].className = "status-line" + (kind ? " "+kind : "");
   }
-
-  function activeMonth(){
-    return state.tab === "review" ? state.monthReview : state.monthInput;
-  }
+  function activeMonth(){ return state.tab === "review" ? state.monthReview : state.monthInput; }
 
   async function fetchMonth(month, silent){
+    if (!session) return;
     try{
       var res = await sb.from("pesanan").select("*").eq("bulan", month).order("created_at", { ascending: true });
       if (res.error) throw res.error;
@@ -828,7 +948,6 @@
 
   async function addItem(){
     var def = JENIS_DEF[state.jenis];
-    var dari = el.dari.value.trim();
     var nama = el.nama_obat.value.trim();
     var satuan = el.satuan.value.trim();
     var jumlah = parseFloat(el.jumlah.value);
@@ -849,21 +968,13 @@
       return;
     }
 
-    try{ localStorage.setItem("spcerme_nama", dari); }catch(e){}
-
     el["btn-tambah"].disabled = true;
     setStatus("Menyimpan…");
     try{
       var res = await sb.from("pesanan").insert([{
-        bulan: state.monthInput,
-        jenis: state.jenis,
-        nama_obat: nama,
-        satuan: satuan,
-        jumlah: jumlah,
-        bentuk_kekuatan: bentuk || null,
-        zat_aktif: zat || null,
-        keterangan: ket || null,
-        dari: dari || "(tanpa nama)",
+        bulan: state.monthInput, jenis: state.jenis, nama_obat: nama, satuan: satuan, jumlah: jumlah,
+        bentuk_kekuatan: bentuk || null, zat_aktif: zat || null, keterangan: ket || null,
+        dari: (profile && profile.nama) || (session && session.user.email) || "(tidak diketahui)",
         selesai: false
       }]);
       if (res.error) throw res.error;
@@ -910,28 +1021,20 @@
     for (var i=0;i<done.length;i++){ await deleteItem(done[i].id); }
   });
 
-  function esc(s){
-    return String(s==null?"":s).replace(/[&<>]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]; });
-  }
-
   function fmtCell(col, it){
     if (col === "jumlah"){
-      if (it.jenis === "prekursor"){
-        return it.jumlah + " (" + capitalize(terbilang(it.jumlah)) + ")";
-      }
+      if (it.jenis === "prekursor") return it.jumlah + " (" + capitalize(terbilang(it.jumlah)) + ")";
       return String(it.jumlah);
     }
     return it[col] || (col==="keterangan" ? "–" : "");
   }
 
-  // ---------- INPUT TAB rendering ----------
   function renderInputGroups(){
     el["bulan-label-input"].textContent = monthLabel(state.monthInput);
-    var itemsThisMonth = state.items;
     var html = "";
     JENIS_ORDER.forEach(function(j){
       var def = JENIS_DEF[j];
-      var rows = itemsThisMonth.filter(function(it){ return it.jenis === j; });
+      var rows = state.items.filter(function(it){ return it.jenis === j; });
       html += '<div class="section-title'+(j==="oot"||j==="prekursor"?" "+j:"")+'"><h3>'+def.label+'</h3><span class="count">'+rows.length+' item</span></div>';
       if (!rows.length){
         html += '<div class="table-wrap"><table><tbody><tr class="empty-row"><td>Belum ada item.</td></tr></tbody></table></div>';
@@ -940,9 +1043,7 @@
       html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>'+def.headers.slice(1).join('</th><th>')+'</th><th>Dari</th><th></th></tr></thead><tbody>';
       rows.forEach(function(it, idx){
         html += '<tr class="'+(it.selesai?"done":"")+'"><td class="num-col">'+(idx+1)+'</td>';
-        def.cols.forEach(function(col){
-          html += '<td'+(col==="jumlah"?' class="num-col"':'')+'>'+esc(fmtCell(col,it))+'</td>';
-        });
+        def.cols.forEach(function(col){ html += '<td'+(col==="jumlah"?' class="num-col"':'')+'>'+esc(fmtCell(col,it))+'</td>'; });
         html += '<td class="who">'+esc(it.dari)+'</td>';
         html += '<td><button type="button" class="icon-btn" data-del="'+it.id+'" title="Hapus">✕</button></td></tr>';
       });
@@ -951,7 +1052,6 @@
     el["input-groups"].innerHTML = html;
   }
 
-  // ---------- REVIEW TAB rendering ----------
   function tsvForJenis(j){
     var def = JENIS_DEF[j];
     var rows = state.items.filter(function(it){ return it.jenis === j; });
@@ -965,25 +1065,27 @@
   }
 
   function renderReviewGroups(){
+    var admin = isAdmin();
     var html = "";
     JENIS_ORDER.forEach(function(j){
       var def = JENIS_DEF[j];
       var rows = state.items.filter(function(it){ return it.jenis === j; });
-      html += '<div class="card">';
-      html += '<div class="toolbar"><div class="section-title'+(j==="oot"||j==="prekursor"?" "+j:"")+'" style="margin:0;"><h3>'+def.label+' <span class="badge-tag mono">'+def.docTitle+'</span></h3><span class="count">'+rows.length+' item</span></div>';
+      html += '<div class="panel">';
+      html += '<div class="toolbar"><div class="section-title'+(j==="oot"||j==="prekursor"?" "+j:"")+'" style="margin:0;"><h3>'+def.label+' <span class="badge-tag">'+def.docTitle+'</span></h3><span class="count">'+rows.length+' item</span></div>';
       html += '<div class="actions"><button type="button" class="btn btn-ghost" data-copy="'+j+'">Salin sebagai tabel</button></div></div>';
       if (!rows.length){
         html += '<div class="table-wrap"><table><tbody><tr class="empty-row"><td>Belum ada pesanan '+def.label.toLowerCase()+' bulan ini.</td></tr></tbody></table></div>';
       } else {
-        html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>'+def.headers.slice(1).join('</th><th>')+'</th><th>Dari</th><th>Selesai</th><th></th></tr></thead><tbody>';
+        html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>'+def.headers.slice(1).join('</th><th>')+'</th><th>Dari</th>'+(admin?'<th>Selesai</th><th></th>':'')+'</tr></thead><tbody>';
         rows.forEach(function(it, idx){
           html += '<tr class="'+(it.selesai?"done":"")+'"><td class="num-col">'+(idx+1)+'</td>';
-          def.cols.forEach(function(col){
-            html += '<td'+(col==="jumlah"?' class="num-col"':'')+'>'+esc(fmtCell(col,it))+'</td>';
-          });
+          def.cols.forEach(function(col){ html += '<td'+(col==="jumlah"?' class="num-col"':'')+'>'+esc(fmtCell(col,it))+'</td>'; });
           html += '<td class="who">'+esc(it.dari)+'</td>';
-          html += '<td><input type="checkbox" class="check" data-done="'+it.id+'" '+(it.selesai?"checked":"")+'></td>';
-          html += '<td><button type="button" class="icon-btn" data-del="'+it.id+'" title="Hapus">✕</button></td></tr>';
+          if (admin){
+            html += '<td><input type="checkbox" class="check" data-done="'+it.id+'" '+(it.selesai?"checked":"")+'></td>';
+            html += '<td><button type="button" class="icon-btn" data-del="'+it.id+'" title="Hapus">✕</button></td>';
+          }
+          html += '</tr>';
         });
         html += '</tbody></table></div>';
       }
@@ -993,12 +1095,8 @@
   }
 
   function wireRowActions(container){
-    container.querySelectorAll("[data-del]").forEach(function(b){
-      b.addEventListener("click", function(){ deleteItem(b.dataset.del); });
-    });
-    container.querySelectorAll("[data-done]").forEach(function(c){
-      c.addEventListener("change", function(){ toggleSelesai(c.dataset.done, c.checked); });
-    });
+    container.querySelectorAll("[data-del]").forEach(function(b){ b.addEventListener("click", function(){ deleteItem(b.dataset.del); }); });
+    container.querySelectorAll("[data-done]").forEach(function(c){ c.addEventListener("change", function(){ toggleSelesai(c.dataset.done, c.checked); }); });
     container.querySelectorAll("[data-copy]").forEach(function(b){
       b.addEventListener("click", async function(){
         var txt = tsvForJenis(b.dataset.copy);
@@ -1006,31 +1104,18 @@
           await navigator.clipboard.writeText(txt);
           var old = b.textContent; b.textContent = "Tersalin ✓";
           setTimeout(function(){ b.textContent = old; }, 1600);
-        }catch(e){
-          alert("Tidak bisa menyalin otomatis. Salin manual dari sini:\n\n" + txt);
-        }
+        }catch(e){ alert("Tidak bisa menyalin otomatis. Salin manual dari sini:\n\n" + txt); }
       });
     });
   }
 
   function renderAll(){
+    el["btn-clear-done"].hidden = !isAdmin();
     renderInputGroups();
     renderReviewGroups();
     wireRowActions(el["input-groups"]);
     wireRowActions(el["review-groups"]);
   }
-
-  renderAll();
-  updateKatalogHint();
-  loadCatalog();
-  fetchMonth(activeMonth());
-
-  // light polling so changes from other devices show up without a manual refresh
-  setInterval(function(){
-    if (document.visibilityState === "visible" && state.tab !== "katalog"){
-      fetchMonth(activeMonth(), true);
-    }
-  }, 15000);
 
 })();
 </script>
