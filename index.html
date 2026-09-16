@@ -403,6 +403,7 @@
           <input type="month" id="bulan-review">
         </div>
         <div class="actions">
+          <button type="button" class="btn btn-primary" id="btn-download-all">Unduh 4 Dokumen (ZIP)</button>
           <button type="button" class="btn btn-ghost" id="btn-clear-done">Hapus yang sudah selesai</button>
         </div>
       </div>
@@ -1072,7 +1073,9 @@
       var rows = state.items.filter(function(it){ return it.jenis === j; });
       html += '<div class="panel">';
       html += '<div class="toolbar"><div class="section-title'+(j==="oot"||j==="prekursor"?" "+j:"")+'" style="margin:0;"><h3>'+def.label+' <span class="badge-tag">'+def.docTitle+'</span></h3><span class="count">'+rows.length+' item</span></div>';
-      html += '<div class="actions"><button type="button" class="btn btn-ghost" data-copy="'+j+'">Salin sebagai tabel</button></div></div>';
+      html += '<div class="actions">';
+      if (admin) html += '<button type="button" class="btn btn-primary" data-download="'+j+'">Unduh Word</button>';
+      html += '<button type="button" class="btn btn-ghost" data-copy="'+j+'">Salin sebagai tabel</button></div></div>';
       if (!rows.length){
         html += '<div class="table-wrap"><table><tbody><tr class="empty-row"><td>Belum ada pesanan '+def.label.toLowerCase()+' bulan ini.</td></tr></tbody></table></div>';
       } else {
@@ -1107,10 +1110,110 @@
         }catch(e){ alert("Tidak bisa menyalin otomatis. Salin manual dari sini:\n\n" + txt); }
       });
     });
+    container.querySelectorAll("[data-download]").forEach(function(b){
+      b.addEventListener("click", async function(){
+        var old = b.textContent; b.disabled = true; b.textContent = "Menyiapkan…";
+        try{
+          var blob = await buildDocxBlob(b.dataset.download);
+          triggerDownload(blob, FILENAME_TPL[b.dataset.download](monthLabel(state.monthReview)));
+        }catch(e){ alert("Gagal membuat file Word: " + errMsg(e)); }
+        b.disabled = false; b.textContent = old;
+      });
+    });
   }
+
+  // ================= WORD (.docx) GENERATION =================
+  var FILENAME_TPL = {
+    reguler: function(m){ return "SP KOSONGAN_Klinik Surya Giri Jaya Cerme " + m + ".docx"; },
+    bmhp: function(m){ return "SP KOSONGAN_Klinik Surya Giri Jaya Cerme BMHP " + m + ".docx"; },
+    oot: function(m){ return "SP OOT_Klinik Surya Giri Jaya Cerme " + m + ".docx"; },
+    prekursor: function(m){ return "SP PREKURSOR_Klinik Surya Giri Jaya Cerme " + m + ".docx"; }
+  };
+  var NOMOR_PREFIX = { oot: "02", prekursor: "01" };
+
+  var docxLibPromise = null;
+  function loadDocxLib(){
+    if (docxLibPromise) return docxLibPromise;
+    docxLibPromise = new Promise(function(resolve, reject){
+      var s = document.createElement("script");
+      s.src = "vendor/docx-bundle.js";
+      s.onload = function(){ resolve(); };
+      s.onerror = function(){ docxLibPromise = null; reject(new Error("Gagal memuat pustaka pembuat Word (cek koneksi internet).")); };
+      document.head.appendChild(s);
+    });
+    return docxLibPromise;
+  }
+
+  function formatTanggalPanjang(d){
+    var names = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+    return d.getDate() + " " + names[d.getMonth()] + " " + d.getFullYear();
+  }
+
+  function buildItemRow(j, it, idx){
+    var def = JENIS_DEF[j];
+    var row = { no: idx + 1 };
+    def.cols.forEach(function(col){
+      if (col === "jumlah") row.jumlah = fmtCell("jumlah", it);
+      else row[col] = it[col] || (col === "keterangan" ? "-" : "");
+    });
+    return row;
+  }
+
+  async function buildDocxBlob(j){
+    await loadDocxLib();
+    var monthStr = state.monthReview;
+    var rows = state.items.filter(function(it){ return it.jenis === j; });
+    var resp = await fetch("templates/" + j + ".docx");
+    if (!resp.ok) throw new Error("Template tidak ditemukan di server (" + resp.status + ")");
+    var buf = await resp.arrayBuffer();
+    var zip = new window.PizZip(buf);
+    var doc = new window.Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
+    var data = {
+      tanggal: formatTanggalPanjang(new Date()),
+      items: rows.map(function(it, idx){ return buildItemRow(j, it, idx); })
+    };
+    if (NOMOR_PREFIX[j]){
+      var parts = monthStr.split("-");
+      data.nomor_sp = NOMOR_PREFIX[j] + "/" + parts[1] + "/" + parts[0];
+    }
+    doc.render(data);
+    return doc.getZip().generate({ type: "blob", mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+  }
+
+  function triggerDownload(blob, filename){
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 4000);
+  }
+
+  document.getElementById("btn-download-all").addEventListener("click", async function(){
+    var btn = this;
+    var old = btn.textContent; btn.disabled = true; btn.textContent = "Menyiapkan 4 dokumen…";
+    try{
+      await loadDocxLib();
+      var monthLbl = monthLabel(state.monthReview);
+      var zipOut = new window.PizZip();
+      for (var i = 0; i < JENIS_ORDER.length; i++){
+        var j = JENIS_ORDER[i];
+        var blob = await buildDocxBlob(j);
+        var buf = await blob.arrayBuffer();
+        zipOut.file(FILENAME_TPL[j](monthLbl), buf);
+      }
+      var outBlob = zipOut.generate({ type: "blob", mimeType: "application/zip" });
+      triggerDownload(outBlob, "SP " + monthLbl + ".zip");
+    }catch(e){
+      alert("Gagal membuat berkas ZIP: " + errMsg(e));
+    }
+    btn.disabled = false; btn.textContent = old;
+  });
 
   function renderAll(){
     el["btn-clear-done"].hidden = !isAdmin();
+    document.getElementById("btn-download-all").hidden = !isAdmin();
     renderInputGroups();
     renderReviewGroups();
     wireRowActions(el["input-groups"]);
