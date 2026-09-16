@@ -462,6 +462,10 @@
   var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJncmJkZ3FpZWZ5bmJraWx5cmR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1Mjc1NzUsImV4cCI6MjEwNTEwMzU3NX0._es_cm6-PcsyaZH2I7ADBa76hglyjjSDRmNS70PP0gw";
   var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+  // Absolute paths (independent of trailing-slash / how the page URL was typed)
+  var TEMPLATE_BASE = "/sp-klinik/templates/";
+  var VENDOR_BASE = "/sp-klinik/vendor/";
+
   var JENIS_DEF = {
     reguler: { label:"Obat Reguler", docTitle:"SP KOSONGAN",
       cols: ["nama_obat","satuan","jumlah","keterangan"],
@@ -1136,7 +1140,7 @@
     if (docxLibPromise) return docxLibPromise;
     docxLibPromise = new Promise(function(resolve, reject){
       var s = document.createElement("script");
-      s.src = "vendor/docx-bundle.js";
+      s.src = VENDOR_BASE + "docx-bundle.js?v=3";
       s.onload = function(){ resolve(); };
       s.onerror = function(){ docxLibPromise = null; reject(new Error("Gagal memuat pustaka pembuat Word (cek koneksi internet).")); };
       document.head.appendChild(s);
@@ -1163,8 +1167,8 @@
     await loadDocxLib();
     var monthStr = state.monthReview;
     var rows = state.items.filter(function(it){ return it.jenis === j; });
-    var resp = await fetch("templates/" + j + ".docx");
-    if (!resp.ok) throw new Error("Template tidak ditemukan di server (" + resp.status + ")");
+    var resp = await fetch(TEMPLATE_BASE + j + ".docx?v=" + Date.now());
+    if (!resp.ok) throw new Error("Template tidak ditemukan di server (" + resp.status + "). Coba muat ulang halaman (Ctrl+F5) lalu ulangi.");
     var buf = await resp.arrayBuffer();
     var zip = new window.PizZip(buf);
     var doc = new window.Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
