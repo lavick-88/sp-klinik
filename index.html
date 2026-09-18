@@ -331,14 +331,7 @@
 
     <div class="panel">
       <h2>Tambah item pesanan</h2>
-      <p class="hint">Pilih jenis SP dulu &mdash; kolom yang diminta menyesuaikan otomatis.</p>
-
-      <div class="jenis-picker" id="jenis-picker">
-        <button type="button" class="jenis-btn active" data-jenis="reguler"><span class="jenis-code">SP KOSONGAN</span><span class="jenis-name">Obat Reguler</span></button>
-        <button type="button" class="jenis-btn" data-jenis="bmhp"><span class="jenis-code">SP KOSONGAN &middot; BMHP</span><span class="jenis-name">Bahan Medis Habis Pakai</span></button>
-        <button type="button" class="jenis-btn" data-jenis="oot"><span class="jenis-code">SP OOT</span><span class="jenis-name">Obat Tertentu</span></button>
-        <button type="button" class="jenis-btn" data-jenis="prekursor"><span class="jenis-code">SP PREKURSOR</span><span class="jenis-name">Prekursor Farmasi</span></button>
-      </div>
+      <p class="hint">Cukup catat nama obat, satuan, dan jumlahnya &mdash; kategori (Reguler/BMHP/OOT/Prekursor) nanti dipilah oleh apoteker di tab Riwayat &amp; Review.</p>
 
       <div class="row">
         <div class="field grow field-autocomplete">
@@ -358,19 +351,6 @@
         <div class="field narrow">
           <label for="jumlah">Jumlah</label>
           <input type="number" id="jumlah" min="0" step="1" placeholder="0">
-        </div>
-      </div>
-
-      <div class="row extra-fields" id="fields-bentuk">
-        <div class="field grow">
-          <label for="bentuk_kekuatan">Bentuk &amp; kekuatan sediaan</label>
-          <input type="text" id="bentuk_kekuatan" placeholder="mis. Tablet 15 mg">
-        </div>
-      </div>
-      <div class="row extra-fields" id="fields-zat">
-        <div class="field grow">
-          <label for="zat_aktif">Zat aktif prekursor</label>
-          <input type="text" id="zat_aktif" placeholder="mis. Pseudoefedrin HCl">
         </div>
       </div>
 
@@ -523,7 +503,6 @@
   // --- app state ---
   var state = {
     tab: "input",
-    jenis: "reguler",
     monthInput: currentMonthStr(),
     monthReview: currentMonthStr(),
     items: [],
@@ -541,9 +520,9 @@
   }
 
   var el = {};
-  ["bulan-input","bulan-review","nama_obat","satuan","jumlah","bentuk_kekuatan","zat_aktif",
+  ["bulan-input","bulan-review","nama_obat","satuan","jumlah",
    "keterangan","btn-tambah","input-status","input-groups","bulan-label-input","review-groups",
-   "fields-bentuk","fields-zat","jenis-picker","nama-suggest","katalog-hint"
+   "nama-suggest","katalog-hint"
   ].forEach(function(id){ el[id] = document.getElementById(id); });
 
   el["bulan-input"].value = state.monthInput;
@@ -640,21 +619,6 @@
     });
   });
 
-  // --- jenis picker ---
-  el["jenis-picker"].addEventListener("click", function(e){
-    var b = e.target.closest(".jenis-btn");
-    if(!b) return;
-    document.querySelectorAll("#jenis-picker .jenis-btn").forEach(function(x){ x.classList.remove("active"); });
-    b.classList.add("active");
-    state.jenis = b.dataset.jenis;
-    var def = JENIS_DEF[state.jenis];
-    el["fields-bentuk"].classList.toggle("show", def.cols.indexOf("bentuk_kekuatan") !== -1);
-    el["fields-zat"].classList.toggle("show", def.cols.indexOf("zat_aktif") !== -1);
-    el.nama_obat.value = "";
-    updateKatalogHint();
-    hideSuggest();
-  });
-
   // ================= KATALOG (search + master data) =================
   async function loadCatalog(){
     try{
@@ -671,21 +635,40 @@
   }
 
   function updateKatalogHint(){
-    var n = state.catalog[state.jenis].length;
+    var seen = {};
+    JENIS_ORDER.forEach(function(j){
+      state.catalog[j].forEach(function(p){ seen[p.nama_obat.toLowerCase()] = true; });
+    });
+    var n = Object.keys(seen).length;
     el["katalog-hint"].textContent = n
       ? "Cari dari " + n + " obat yang pernah dipesan, atau ketik nama baru."
-      : "Belum ada riwayat untuk kategori ini — nama baru akan otomatis tersimpan.";
+      : "Belum ada riwayat obat — nama baru akan otomatis tersimpan setelah dipilah apoteker.";
+  }
+
+  function findCatalogMatch(nama){
+    var lower = nama.toLowerCase();
+    for (var i = 0; i < JENIS_ORDER.length; i++){
+      var j = JENIS_ORDER[i];
+      var hit = state.catalog[j].find(function(p){ return p.nama_obat.toLowerCase() === lower; });
+      if (hit) return { jenis: j, entry: hit };
+    }
+    return null;
   }
 
   function suggestionPool(){
-    var pool = state.catalog[state.jenis].slice();
+    var pool = [];
     var known = {};
-    pool.forEach(function(p){ known[p.nama_obat.toLowerCase()] = true; });
-    state.items.filter(function(it){ return it.jenis === state.jenis; }).forEach(function(it){
+    JENIS_ORDER.forEach(function(j){
+      state.catalog[j].forEach(function(p){
+        var key = p.nama_obat.toLowerCase();
+        if (!known[key]){ known[key] = true; pool.push(p); }
+      });
+    });
+    state.items.forEach(function(it){
       var key = it.nama_obat.toLowerCase();
       if (!known[key]){
         known[key] = true;
-        pool.push({ nama_obat: it.nama_obat, satuan: it.satuan, bentuk_kekuatan: it.bentuk_kekuatan, zat_aktif: it.zat_aktif });
+        pool.push({ nama_obat: it.nama_obat, satuan: it.satuan });
       }
     });
     return pool;
@@ -712,7 +695,8 @@
     state.suggestHi = -1;
     if (!matches.length){ hideSuggest(); return; }
     el["nama-suggest"].innerHTML = matches.map(function(m, i){
-      return '<li data-i="'+i+'"><span>'+esc(m.nama_obat)+'</span><span class="meta">'+esc(m.satuan||"")+'</span></li>';
+      var meta = m.jenis ? JENIS_DEF[m.jenis].docTitle : (m.satuan||"");
+      return '<li data-i="'+i+'"><span>'+esc(m.nama_obat)+'</span><span class="meta">'+esc(meta)+'</span></li>';
     }).join("");
     el["nama-suggest"].hidden = false;
   }
@@ -722,8 +706,6 @@
     if (!m) return;
     el.nama_obat.value = m.nama_obat;
     if (m.satuan && !el.satuan.value) el.satuan.value = m.satuan;
-    if (m.bentuk_kekuatan && !el.bentuk_kekuatan.value) el.bentuk_kekuatan.value = m.bentuk_kekuatan;
-    if (m.zat_aktif && !el.zat_aktif.value) el.zat_aktif.value = m.zat_aktif;
     hideSuggest();
     el.jumlah.focus();
   }
@@ -951,41 +933,32 @@
   }
 
   async function addItem(){
-    var def = JENIS_DEF[state.jenis];
     var nama = el.nama_obat.value.trim();
     var satuan = el.satuan.value.trim();
     var jumlah = parseFloat(el.jumlah.value);
-    var bentuk = el.bentuk_kekuatan.value.trim();
-    var zat = el.zat_aktif.value.trim();
     var ket = el.keterangan.value.trim();
 
     if (!nama || !satuan || !jumlah || jumlah <= 0){
       setStatus("Isi nama obat, satuan, dan jumlah (lebih dari 0) dulu ya.", "error");
       return;
     }
-    if (def.cols.indexOf("bentuk_kekuatan")!==-1 && !bentuk){
-      setStatus("Bentuk & kekuatan sediaan wajib diisi untuk " + def.label + ".", "error");
-      return;
-    }
-    if (def.cols.indexOf("zat_aktif")!==-1 && !zat){
-      setStatus("Zat aktif prekursor wajib diisi untuk " + def.label + ".", "error");
-      return;
-    }
+
+    var match = findCatalogMatch(nama);
 
     el["btn-tambah"].disabled = true;
     setStatus("Menyimpan…");
     try{
       var res = await sb.from("pesanan").insert([{
-        bulan: state.monthInput, jenis: state.jenis, nama_obat: nama, satuan: satuan, jumlah: jumlah,
-        bentuk_kekuatan: bentuk || null, zat_aktif: zat || null, keterangan: ket || null,
+        bulan: state.monthInput, jenis: null, nama_obat: nama, satuan: satuan, jumlah: jumlah,
+        bentuk_kekuatan: (match && match.entry.bentuk_kekuatan) || null,
+        zat_aktif: (match && match.entry.zat_aktif) || null,
+        keterangan: ket || null,
         dari: (profile && profile.nama) || (session && session.user.email) || "(tidak diketahui)"
       }]);
       if (res.error) throw res.error;
-      addToCatalogIfNew(state.jenis, { nama_obat: nama, satuan: satuan, bentuk_kekuatan: bentuk, zat_aktif: zat, keterangan: ket });
-      el.nama_obat.value = ""; el.satuan.value=""; el.jumlah.value = "";
-      el.bentuk_kekuatan.value=""; el.zat_aktif.value=""; el.keterangan.value="";
+      el.nama_obat.value = ""; el.satuan.value=""; el.jumlah.value = ""; el.keterangan.value="";
       el.nama_obat.focus();
-      setStatus(nama + " ditambahkan.", "ok");
+      setStatus(nama + " ditambahkan. Menunggu dipilah apoteker.", "ok");
       fetchMonth(state.monthInput, true);
     }catch(e){
       setStatus("Gagal menyimpan: " + errMsg(e), "error");
@@ -1010,25 +983,25 @@
     return it[col] || (col==="keterangan" ? "–" : "");
   }
 
+  function statusTag(it){
+    if (it.jenis) return '<span class="badge-tag">'+esc(JENIS_DEF[it.jenis].label)+'</span>';
+    return '<span class="badge-tag" style="color:var(--warn); border-color:var(--warn);">Belum dipilah</span>';
+  }
+
   function renderInputGroups(){
     el["bulan-label-input"].textContent = monthLabel(state.monthInput);
-    var html = "";
-    JENIS_ORDER.forEach(function(j){
-      var def = JENIS_DEF[j];
-      var rows = state.items.filter(function(it){ return it.jenis === j; });
-      html += '<div class="section-title'+(j==="oot"||j==="prekursor"?" "+j:"")+'"><h3>'+def.label+'</h3><span class="count">'+rows.length+' item</span></div>';
-      if (!rows.length){
-        html += '<div class="table-wrap"><table><tbody><tr class="empty-row"><td>Belum ada item.</td></tr></tbody></table></div>';
-        return;
-      }
-      html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>'+def.headers.slice(1).join('</th><th>')+'</th><th></th></tr></thead><tbody>';
+    var rows = state.items;
+    var html = '<div class="table-wrap"><table><thead><tr><th>No</th><th>Nama Obat</th><th>Satuan</th><th>Jumlah</th><th>Keterangan</th><th>Status</th><th></th></tr></thead><tbody>';
+    if (!rows.length){
+      html += '<tr class="empty-row"><td colspan="7">Belum ada item bulan ini.</td></tr>';
+    } else {
       rows.forEach(function(it, idx){
-        html += '<tr><td class="num-col">'+(idx+1)+'</td>';
-        def.cols.forEach(function(col){ html += '<td'+(col==="jumlah"?' class="num-col"':'')+'>'+esc(fmtCell(col,it))+'</td>'; });
-        html += '<td><button type="button" class="icon-btn" data-del="'+it.id+'" title="Hapus">✕</button></td></tr>';
+        html += '<tr><td class="num-col">'+(idx+1)+'</td><td>'+esc(it.nama_obat)+'</td><td>'+esc(it.satuan)+'</td>'+
+          '<td class="num-col">'+it.jumlah+'</td><td>'+esc(it.keterangan||"–")+'</td><td>'+statusTag(it)+'</td>'+
+          '<td><button type="button" class="icon-btn" data-del="'+it.id+'" title="Hapus">✕</button></td></tr>';
       });
-      html += '</tbody></table></div>';
-    });
+    }
+    html += '</tbody></table></div>';
     el["input-groups"].innerHTML = html;
   }
 
@@ -1044,9 +1017,84 @@
     return lines.join("\n");
   }
 
+  function suggestJenisFor(nama){
+    return findCatalogMatch(nama);
+  }
+
+  function reclassCellsHtml(id, current, suggested){
+    var sel = current || suggested || "";
+    var initialEnabled = !!sel && sel !== (current || "");
+    var html = '<select class="reclass-select" data-id="'+id+'" data-current="'+esc(current||"")+'">';
+    html += '<option value=""'+(sel?"":" selected")+' disabled>Pilih kategori&hellip;</option>';
+    JENIS_ORDER.forEach(function(j){
+      html += '<option value="'+j+'"'+(j===sel?" selected":"")+'>'+esc(JENIS_DEF[j].label)+'</option>';
+    });
+    html += '</select>';
+    var btn = '<button type="button" class="btn-reclass k-save" data-id="'+id+'"'+(initialEnabled?"":" disabled")+'>'+(current?"Pindah":"Terapkan")+'</button>';
+    return { selectHtml: html, btnHtml: btn };
+  }
+
+  function renderUnsortedPanel(admin){
+    var rows = state.items.filter(function(it){ return !it.jenis; });
+    var html = '<div class="panel">';
+    html += '<div class="toolbar"><div class="section-title" style="margin:0;"><h3>Belum Dipilah</h3><span class="count">'+rows.length+' item</span></div></div>';
+    html += '<p class="hint">Item hasil entri asisten, menunggu dipilah ke salah satu dari 4 kategori SP. Saran kategori diambil dari riwayat Database Obat.</p>';
+    if (!rows.length){
+      html += '<div class="table-wrap"><table><tbody><tr class="empty-row"><td>Tidak ada item yang menunggu pemilahan.</td></tr></tbody></table></div>';
+    } else {
+      html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>Nama Obat</th><th>Satuan</th><th>Jumlah</th><th>Keterangan</th>'+(admin?'<th>Kategori</th><th></th>':'')+'<th></th></tr></thead><tbody>';
+      rows.forEach(function(it, idx){
+        var sug = suggestJenisFor(it.nama_obat);
+        html += '<tr data-id="'+it.id+'"><td class="num-col">'+(idx+1)+'</td><td>'+esc(it.nama_obat)+'</td><td>'+esc(it.satuan)+'</td>'+
+          '<td class="num-col">'+it.jumlah+'</td><td>'+esc(it.keterangan||"–")+'</td>';
+        if (admin){
+          var rc = reclassCellsHtml(it.id, "", sug ? sug.jenis : "");
+          html += '<td class="k-cell">'+rc.selectHtml+(sug ? '<p class="field-hint">Saran: '+esc(JENIS_DEF[sug.jenis].label)+'</p>' : '')+'</td>';
+          html += '<td>'+rc.btnHtml+'</td>';
+        }
+        html += '<td><button type="button" class="icon-btn" data-del="'+it.id+'" title="Hapus">✕</button></td></tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  async function reclassify(id, newJenis){
+    var it = state.items.find(function(x){ return String(x.id) === String(id); });
+    if (!it) return;
+    var def = JENIS_DEF[newJenis];
+    var updates = { jenis: newJenis };
+    if (def.cols.indexOf("bentuk_kekuatan") !== -1 && !it.bentuk_kekuatan){
+      var v = prompt("Bentuk & kekuatan sediaan untuk " + it.nama_obat + ":", it.bentuk_kekuatan || "");
+      if (v === null) return;
+      if (!v.trim()){ alert("Bentuk & kekuatan sediaan wajib diisi untuk " + def.label + "."); return; }
+      updates.bentuk_kekuatan = v.trim();
+    }
+    if (def.cols.indexOf("zat_aktif") !== -1 && !it.zat_aktif){
+      var v2 = prompt("Zat aktif prekursor untuk " + it.nama_obat + ":", it.zat_aktif || "");
+      if (v2 === null) return;
+      if (!v2.trim()){ alert("Zat aktif prekursor wajib diisi untuk " + def.label + "."); return; }
+      updates.zat_aktif = v2.trim();
+    }
+    try{
+      var res = await sb.from("pesanan").update(updates).eq("id", id).select();
+      if (res.error) throw res.error;
+      var idx = state.items.findIndex(function(x){ return String(x.id) === String(id); });
+      if (idx !== -1 && res.data && res.data[0]) state.items[idx] = res.data[0];
+      addToCatalogIfNew(newJenis, {
+        nama_obat: it.nama_obat, satuan: it.satuan,
+        bentuk_kekuatan: updates.bentuk_kekuatan || it.bentuk_kekuatan,
+        zat_aktif: updates.zat_aktif || it.zat_aktif,
+        keterangan: it.keterangan
+      });
+      renderAll();
+    }catch(e){ alert("Gagal memindahkan kategori: " + errMsg(e)); }
+  }
+
   function renderReviewGroups(){
     var admin = isAdmin();
-    var html = "";
+    var html = renderUnsortedPanel(admin);
     JENIS_ORDER.forEach(function(j){
       var def = JENIS_DEF[j];
       var rows = state.items.filter(function(it){ return it.jenis === j; });
@@ -1058,11 +1106,14 @@
       if (!rows.length){
         html += '<div class="table-wrap"><table><tbody><tr class="empty-row"><td>Belum ada pesanan '+def.label.toLowerCase()+' bulan ini.</td></tr></tbody></table></div>';
       } else {
-        html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>'+def.headers.slice(1).join('</th><th>')+'</th>'+(admin?'<th></th>':'')+'</tr></thead><tbody>';
+        html += '<div class="table-wrap"><table><thead><tr><th>No</th><th>'+def.headers.slice(1).join('</th><th>')+'</th>'+(admin?'<th>Pindah kategori</th><th></th><th></th>':'')+'</tr></thead><tbody>';
         rows.forEach(function(it, idx){
-          html += '<tr><td class="num-col">'+(idx+1)+'</td>';
+          html += '<tr data-id="'+it.id+'"><td class="num-col">'+(idx+1)+'</td>';
           def.cols.forEach(function(col){ html += '<td'+(col==="jumlah"?' class="num-col"':'')+'>'+esc(fmtCell(col,it))+'</td>'; });
           if (admin){
+            var rc = reclassCellsHtml(it.id, j);
+            html += '<td class="k-cell">'+rc.selectHtml+'</td>';
+            html += '<td>'+rc.btnHtml+'</td>';
             html += '<td><button type="button" class="icon-btn" data-del="'+it.id+'" title="Hapus">✕</button></td>';
           }
           html += '</tr>';
@@ -1076,6 +1127,18 @@
 
   function wireRowActions(container){
     container.querySelectorAll("[data-del]").forEach(function(b){ b.addEventListener("click", function(){ deleteItem(b.dataset.del); }); });
+    container.querySelectorAll(".reclass-select").forEach(function(sel){
+      sel.addEventListener("change", function(){
+        var btn = sel.closest("tr").querySelector(".btn-reclass");
+        if (btn) btn.disabled = !sel.value || sel.value === sel.dataset.current;
+      });
+    });
+    container.querySelectorAll(".btn-reclass").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var sel = btn.closest("tr").querySelector(".reclass-select");
+        if (sel && sel.value) reclassify(btn.dataset.id, sel.value);
+      });
+    });
     container.querySelectorAll("[data-copy]").forEach(function(b){
       b.addEventListener("click", async function(){
         var txt = tsvForJenis(b.dataset.copy);
