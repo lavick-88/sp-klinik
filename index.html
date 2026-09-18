@@ -216,10 +216,10 @@
 
   td.k-cell{padding:5px 6px;}
   .k-input{
-    width:100%; min-width:110px; border:1px solid transparent; background:transparent; color:var(--ink);
+    width:100%; min-width:110px; border:1px solid var(--line); background:var(--bg); color:var(--ink);
     border-radius:3px; padding:6px 7px; font:inherit; font-size:13.5px;
   }
-  .k-input:hover{border-color:var(--line);}
+  .k-input:hover{border-color:var(--ink-muted);}
   .k-input:focus{border-color:var(--accent); background:var(--bg); outline:none;}
   .k-input.dirty{border-color:var(--warn); background:var(--warn-soft);}
   .k-actions{display:flex; gap:4px; white-space:nowrap;}
@@ -394,7 +394,7 @@
   <section class="view" id="view-katalog">
     <div class="panel">
       <h2>Database obat</h2>
-      <p class="hint">Perbaiki ejaan yang mirip/duplikat, lengkapi satuan yang kosong, atau hapus yang sudah tidak dipakai. Perubahan langsung berlaku untuk pencarian di tab Input Pesanan.</p>
+      <p class="hint">Perbaiki ejaan yang mirip/duplikat, lengkapi satuan yang kosong, atau hapus yang sudah tidak dipakai. Perubahan langsung berlaku untuk pencarian di tab Input Pesanan. Klik langsung pada kotak isian di tabel untuk mengubah nilainya, lalu tombol <strong>Simpan</strong> di baris itu akan aktif.</p>
       <div class="jenis-picker" id="katalog-jenis-picker">
         <button type="button" class="jenis-btn active" data-jenis="reguler"><span class="jenis-code">SP KOSONGAN</span><span class="jenis-name">Obat Reguler</span></button>
         <button type="button" class="jenis-btn" data-jenis="bmhp"><span class="jenis-code">SP KOSONGAN &middot; BMHP</span><span class="jenis-name">Bahan Medis Habis Pakai</span></button>
