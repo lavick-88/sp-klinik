@@ -834,28 +834,19 @@
       return;
     }
 
-    var admin = isAdmin();
     var headerCells = fields.map(function(f){ return "<th>"+esc(COL_LABEL[f])+"</th>"; }).join("");
-    var html = '<div class="table-wrap"><table><thead><tr>'+headerCells+(admin ? '<th></th><th></th>' : '')+'</tr></thead><tbody>';
+    var html = '<div class="table-wrap"><table><thead><tr>'+headerCells+'<th></th><th></th></tr></thead><tbody>';
     rows.forEach(function(it){
       html += '<tr data-id="'+it.id+'">';
       fields.forEach(function(f){
-        if (admin){
-          html += '<td class="k-cell"><input class="k-input" data-field="'+f+'" value="'+esc(it[f]||"")+'"></td>';
-        } else {
-          html += '<td>'+esc(it[f]||"")+'</td>';
-        }
+        html += '<td class="k-cell"><input class="k-input" data-field="'+f+'" value="'+esc(it[f]||"")+'"></td>';
       });
-      if (admin){
-        html += '<td class="k-actions"><button type="button" class="k-save" data-id="'+it.id+'" disabled>Simpan</button></td>';
-        html += '<td><button type="button" class="icon-btn k-del" data-id="'+it.id+'" title="Hapus">✕</button></td>';
-      }
+      html += '<td class="k-actions"><button type="button" class="k-save" data-id="'+it.id+'" disabled>Simpan</button></td>';
+      html += '<td><button type="button" class="icon-btn k-del" data-id="'+it.id+'" title="Hapus">✕</button></td>';
       html += '</tr>';
     });
     html += '</tbody></table></div>';
     katalogEl["katalog-table-wrap"].innerHTML = html;
-
-    if (!admin) return;
 
     katalogEl["katalog-table-wrap"].querySelectorAll(".k-input").forEach(function(inp){
       inp.addEventListener("input", function(){
